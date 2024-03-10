@@ -1,0 +1,28 @@
+{
+  "name": "a3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "build": "yarn drizzle-kit generate:pg",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@drizzle/store": "^1.5.3",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.1",
+    "pg": "^8.11.3",
+    "postgres": "^3.4.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2",
+    "yarn": "^1.22.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.25",
+    "drizzle-kit": "^0.20.14"
+  }
+}
