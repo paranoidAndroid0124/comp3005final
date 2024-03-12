@@ -5,7 +5,7 @@ import postgres from 'postgres';
 import { promisify } from "node:util";
 import { createInterface} from "node:readline";
 
-import { student } from './src/drizzle/schema';
+//import { student } from './src/drizzle/schema';
 import {eq} from "drizzle-orm";
 
 const migrationConnection = postgres(process.env.DATABASE_URL!, { max: 1 });
@@ -27,7 +27,7 @@ const main = async () => {
 
     // *** insert data *** //
     // TODO: can probably do this in schema
-    await insertInitialData();
+    // await insertInitialData();
 
     process.exit(0);
 };
