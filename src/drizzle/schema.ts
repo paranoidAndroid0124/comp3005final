@@ -37,7 +37,7 @@ export const membershipCard = pgTable ('membershipCard', {
     nfc: text('nfc')
 })
 
-export const equipment = pgTable ('equipment', {
+export const equipments = pgTable ('equipment', {
     equipment_id: serial('equipment_id').primaryKey(),
     equipment_name: text('equipment_name'),
     last_maintained: date('last_maintained').notNull(),

@@ -8,8 +8,7 @@ export async function membersRoutes(fastify, options) {
             // Logic to return all members
             const membersList = await db.select().from(members).execute();
             reply.send(membersList);
-        }
-        catch (error) {
+        } catch (error) {
             // handle database errors
             reply.send(500).send( {error: 'Internal Server Error'});
         }
@@ -22,7 +21,7 @@ export async function membersRoutes(fastify, options) {
             const member = await db.select().from(members).where(eq(members.member_id, id)).execute();
 
             if (member.length === 0) {
-                reply.status(404).send({ error: 'Member no found' });
+                reply.status(404).send({ error: 'Member not found' });
             } else {
                 reply.send(member[0])
             }
@@ -44,5 +43,5 @@ export async function membersRoutes(fastify, options) {
         }
     });
 
-    // More route (if needed)
+    // More routes (if needed)
 }
