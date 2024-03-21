@@ -7,8 +7,8 @@ import { createInterface} from "node:readline";
 import Fastify from 'fastify';
 
 import { membersRoutes } from './routes/membersRoutes';
-import {eq} from "drizzle-orm";
 import {equipmentRoutes} from "./routes/equipmentRoutes";
+import {billingRoute} from "./routes/billingRoute";
 
 const migrationConnection = postgres(process.env.DATABASE_URL!, { max: 1 });
 const queryConnection = postgres(process.env.DATABASE_URL!);
@@ -40,6 +40,7 @@ const main = async () => {
 
     fastify.register(membersRoutes);
     fastify.register(equipmentRoutes);
+    fastify.register(billingRoute);
 
     console.log('Starting server');
     // Run the server!

@@ -2,6 +2,7 @@ import {date, integer, pgTable, serial, text, pgSchema} from 'drizzle-orm/pg-cor
 
 export const billingInformation = pgTable('billingInformation', {
     billing_id: serial('billing_id').primaryKey(),
+    member_id: integer('member_id').references(() => members.member_id),
     periodicity: text('periodicity').notNull(),
     payment_info: text('paymentInfo').notNull(), // TODO: this will be a table
     card_type: text('cardType'),
