@@ -1,5 +1,5 @@
 import { db } from '../db';
-import {eq} from "drizzle-orm"; // Update with the correct path to your db connection
+import { eq } from "drizzle-orm";
 import { members } from '../src/drizzle/schema';
 
 export async function membersRoutes(fastify, options) {
@@ -18,7 +18,7 @@ export async function membersRoutes(fastify, options) {
         try {
             // Logic to return a specific member
             const { id } = request.params;
-            const member = await db.select().from(members).where(eq(members.member_id, id)).execute();
+            const member = await db.select().from(members).where(eq(members.user_id, id)).execute();
 
             if (member.length === 0) {
                 reply.status(404).send({ error: 'Member not found' });

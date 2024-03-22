@@ -7,6 +7,27 @@ import {
   pgSchema,
 } from "drizzle-orm/pg-core";
 
+export const users = pgTable("users", {
+  user_id: serial("user_id").primaryKey(),
+  first_name: text("first_name").notNull(),
+  last_name: text("last_name").notNull(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  phone_number: text("phone_number"),
+  address: text("address"),
+});
+
+export const roles = pgTable("roles", {
+  role_id: serial("role_id").primaryKey(),
+  role_name: text("role_name").notNull().unique(),
+});
+
+// allow many-to-many relationship between 'user' and 'roles'
+export const userRoles = pgTable("userRoles", {
+  user_id: integer("user_id").references(() => users.user_id),
+  role_id: integer("role_id").references(()=> roles.role_id),
+})
+
 export const billingInformation = pgTable("billingInformation", {
   billing_id: serial("billing_id").primaryKey(),
   member_id: integer("member_id").references(() => members.member_id),
@@ -19,20 +40,14 @@ export const billingInformation = pgTable("billingInformation", {
 });
 
 export const members = pgTable("member", {
-  member_id: serial("member_id").primaryKey(),
-  billing_id: integer("billing_id").references(
+  user_id: integer("member_id").references(() => users.user_id),
+  billing_id: integer("billing_id").references( //TODO: do we keep this here?
     () => billingInformation.billing_id
   ),
-  first_name: text("first_name").notNull(),
-  last_name: text("last_name").notNull(),
-  address: text("address"),
   health_metric: text("health_metrix"),
   fitness_goals: text("fitness_goals"),
   fitness_achivements: text("fitness_achivements"),
   join_date: date("join_date"),
-  email: text("email").unique(),
-  password: text("password"),
-  phone_number: text("phone_number"),
 });
 
 export const paymentInfo = pgTable("paymentInfo", {
@@ -61,10 +76,7 @@ export const room = pgTable("room", {
 });
 
 export const trainer = pgTable("trainer", {
-  trainer_id: integer("trainer_id").primaryKey(),
-  name: text("name"),
-  address: text("address"),
-  phone_number: text("phone_number"),
+  user_id: integer("user_id").references(() => users.user_id),
 });
 
 export const exercise = pgTable("exercise", {
@@ -74,8 +86,5 @@ export const exercise = pgTable("exercise", {
 });
 
 export const adminStaff = pgTable("adminStaff", {
-  staff_id: serial("staff_id"),
-  first_name: text("first_name").notNull(),
-  last_name: text("last_name").notNull(),
-  email: text("email").notNull().unique(),
+  user_id: integer("user_id").references(() => users.user_id),
 });
