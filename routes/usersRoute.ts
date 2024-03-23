@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { db } from '../db';
 import { eq } from "drizzle-orm";
 import { users } from "../src/drizzle/schema";
@@ -29,13 +30,13 @@ export async function usersRoute(fastify, options) {
         // Retrieve user by email
         const user = await db.select().from(users).where(eq(users.email, email)).execute();
 
-        // if (user && await bcrypt.compare(password, user.password)) { // not sure when I am having issues here
-        //     // Passwords match, create JWT
-        //     const token = jwt.sgin({ userid: user.user_id}, JWT_SECRET, { expiresIn: '1h'});
-        //     reply.send(200);
-        // } else {
-        //     // Authentication failed
-        //     reply.send(401).send({ error: 'Invalid email or password' });
-        // }
+        if (user && await bcrypt.compare(password, user[0].password)) {
+            // Passwords match, create JWT
+            const token = jwt.sgin({ userid: user[0].user_id}, process.env.JWT_SECRET, { expiresIn: '1h'});
+            reply.send(200).send(token);
+        } else {
+            // Authentication failed
+            reply.send(401).send({ error: 'Invalid email or password' });
+        }
     });
 }

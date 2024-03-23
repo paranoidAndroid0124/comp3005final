@@ -22,7 +22,7 @@ export const roles = pgTable("roles", {
   role_name: text("role_name").notNull().unique(),
 });
 
-// allow many-to-many relationship between 'user' and 'roles'
+//allow many-to-many relationship between 'user' and 'roles'
 export const userRoles = pgTable("userRoles", {
   user_id: integer("user_id").references(() => users.user_id),
   role_id: integer("role_id").references(()=> roles.role_id),
@@ -30,7 +30,7 @@ export const userRoles = pgTable("userRoles", {
 
 export const billingInformation = pgTable("billingInformation", {
   billing_id: serial("billing_id").primaryKey(),
-  member_id: integer("member_id").references(() => members.member_id),
+  member_id: integer("member_id").references(() => members.user_id),
   periodicity: text("periodicity").notNull(),
   payment_info: text("paymentInfo").notNull(), // TODO: this will be a table
   card_type: text("cardType"),
@@ -41,9 +41,6 @@ export const billingInformation = pgTable("billingInformation", {
 
 export const members = pgTable("member", {
   user_id: integer("member_id").references(() => users.user_id),
-  billing_id: integer("billing_id").references( //TODO: do we keep this here?
-    () => billingInformation.billing_id
-  ),
   health_metric: text("health_metrix"),
   fitness_goals: text("fitness_goals"),
   fitness_achivements: text("fitness_achivements"),
@@ -52,13 +49,13 @@ export const members = pgTable("member", {
 
 export const paymentInfo = pgTable("paymentInfo", {
   payment_id: serial("payment_id").primaryKey(),
-  member_id: integer("member_id").references(() => members.member_id),
+  member_id: integer("member_id").references(() => members.user_id),
   payment_date: date(`payment_date`),
   amount: integer("amount"),
 });
 
 export const membershipCard = pgTable("membershipCard", {
-  member_id: integer("member_id").references(() => members.member_id),
+  member_id: integer("member_id").references(() => members.user_id),
   nfc: text("nfc"),
 });
 

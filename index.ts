@@ -9,18 +9,13 @@ import Fastify from "fastify";
 import { membersRoutes } from "./routes/membersRoutes";
 import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
+import {members} from "./src/drizzle/schema";
 
 const migrationConnection = postgres(process.env.DATABASE_URL!, { max: 1 });
 const queryConnection = postgres(process.env.DATABASE_URL!);
 
 const db = drizzle(queryConnection);
 
-const readline = createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-const questionAsync = promisify(readline.question).bind(readline);
 
 const main = async () => {
   // *** Set up db *** //
@@ -38,9 +33,28 @@ const main = async () => {
     return { hello: "world" };
   });
 
-  fastify.register(membersRoutes);
-  fastify.register(equipmentRoutes);
-  fastify.register(billingRoute);
+  //await membersRoutes(fastify);
+  // fastify.register(membersRoutes); // these route don't work
+  // fastify.register(equipmentRoutes);
+  // fastify.register(billingRoute);
+  // fastify.register(fastify, options => {
+  //
+  // })
+
+
+  fastify.get('/member', async (request, reply) => {
+    console.log("In members route");
+    try {
+      // Logic to return all members
+      const membersList = await db.select().from(members);
+      console.log(membersList);
+      return reply.send(200).send(membersList);
+    } catch (error) {
+      console.log("Error in member route");
+      // handle database errors
+      return reply.send(500).send( {error: 'Internal Server Error'});
+    }
+  });
 
   console.log("Starting server");
   // Run the server!

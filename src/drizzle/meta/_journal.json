@@ -1,12 +1,12 @@
 {
-  "version": "5",
+  "version": "1",
   "dialect": "pg",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1710205090878,
-      "tag": "0000_cheerful_shockwave",
+      "when": 1711228804939,
+      "tag": "0000_amused_shriek",
       "breakpoints": true
     }
   ]
