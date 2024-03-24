@@ -10,6 +10,7 @@ import { membersRoutes } from "./routes/membersRoutes";
 import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
 import {members} from "./src/drizzle/schema";
+import { users } from "./src/drizzle/schema";
 
 const migrationConnection = postgres(process.env.DATABASE_URL!, { max: 1 });
 const queryConnection = postgres(process.env.DATABASE_URL!);
@@ -33,28 +34,13 @@ const main = async () => {
     return { hello: "world" };
   });
 
-  //await membersRoutes(fastify);
+  await membersRoutes(fastify);
   // fastify.register(membersRoutes); // these route don't work
   // fastify.register(equipmentRoutes);
   // fastify.register(billingRoute);
   // fastify.register(fastify, options => {
   //
   // })
-
-
-  fastify.get('/member', async (request, reply) => {
-    console.log("In members route");
-    try {
-      // Logic to return all members
-      const membersList = await db.select().from(members);
-      console.log(membersList);
-      return reply.send(200).send(membersList);
-    } catch (error) {
-      console.log("Error in member route");
-      // handle database errors
-      return reply.send(500).send( {error: 'Internal Server Error'});
-    }
-  });
 
   console.log("Starting server");
   // Run the server!
@@ -63,7 +49,7 @@ const main = async () => {
     const address = fastify.server.address();
     const port = typeof address === "string" ? address : address?.port;
 
-    console.log("server listening on ${port}");
+    console.log(`server listening on ${port}`);
     fastify.log.info(`server listening on ${port}`);
   } catch (err) {
     fastify.log.error(err);
@@ -79,7 +65,11 @@ async function setUpDB(): Promise<void> {
 }
 
 async function insertInitialData(): Promise<void> {
-  // await db.insert(student).values({first_name: 'john', last_name: 'Doe', email: 'john.doe@example.com', enrollment_date: '2023-09-01'}).execute();
+  // create first user
+  const result = await db.insert(users).values({first_name: 'test', last_name: 'User', email: 'john.doe@example.com', password: 'test', phone_number: '819-666-1234', address: 'jane street'}).returning({data: users.user_id }).execute();
+  console.log("Result:", result[0].data);
+  await db.insert(members).values({user_id: result[0].data, health_metric: 'health', fitness_goals: 'blah', fitness_achivements: 'none', join_date: '2023-09-01'})
+
   // await db.insert(student).values({first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@example.com', enrollment_date: '2023-09-01'}).execute();
   // await db.insert(student).values({first_name: 'Jim', last_name: 'Beam', email: 'jim.beam@example.com', enrollment_date: '2023-09-02'}).execute();
 }

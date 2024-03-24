@@ -9,30 +9,30 @@ export async function membersRoutes(fastify: FastifyInstance, options?) {
         try {
             // Logic to return all members
             const membersList = await db.select().from(members).execute();
-            return reply.send(membersList);
+            return reply.status(200).send(membersList);
         } catch (error) {
             console.log("Error in member route");
             // handle database errors
-            return reply.send(500).send( {error: 'Internal Server Error'});
+            return reply.status(500).send( {error: 'Internal Server Error'});
         }
     });
 
-    // fastify.get('/member/:id', async (request, reply) => {
-    //     try {
-    //         // Logic to return a specific member
-    //         const { id } = request.params;
-    //         const member = await db.select().from(members).where(eq(members.user_id, id)).execute();
-    //
-    //         if (member.length === 0) {
-    //             reply.status(404).send({ error: 'Member not found' });
-    //         } else {
-    //             reply.send(member[0])
-    //         }
-    //     } catch (error) {
-    //         // handle database errors
-    //         reply.status(500).send({ error: 'Internal Server Error'});
-    //     }
-    // });
+    fastify.get<{Params: {id: number}}>('/member/:id', async (request, reply) => {
+        try {
+            // Logic to return a specific member
+            const id  = request.params.id;
+            const member = await db.select().from(members).where(eq(members.user_id, id)).execute();
+
+            if (member.length === 0) {
+                reply.status(404).send({ error: 'Member not found' });
+            } else {
+                reply.send(member[0])
+            }
+        } catch (error) {
+            // handle database errors
+            reply.status(500).send({ error: 'Internal Server Error'});
+        }
+    });
 
     fastify.post('/member', async (request, reply) => {
         try {

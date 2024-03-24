@@ -43,7 +43,7 @@ export const members = pgTable("member", {
   user_id: integer("member_id").references(() => users.user_id),
   health_metric: text("health_metrix"),
   fitness_goals: text("fitness_goals"),
-  fitness_achivements: text("fitness_achivements"),
+  fitness_achivements: text("fitness_achivements"), // TODO: fix typo achievements
   join_date: date("join_date"),
 });
 

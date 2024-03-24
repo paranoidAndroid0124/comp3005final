@@ -21,7 +21,7 @@ export async function usersRoute(fastify, options) {
             address
         }).execute();
 
-        reply.send(201);
+        return reply.send(201);
     });
 
     fastify.post('/login', async  (request, reply) => {
@@ -33,10 +33,10 @@ export async function usersRoute(fastify, options) {
         if (user && await bcrypt.compare(password, user[0].password)) {
             // Passwords match, create JWT
             const token = jwt.sgin({ userid: user[0].user_id}, process.env.JWT_SECRET, { expiresIn: '1h'});
-            reply.send(200).send(token);
+            return reply.status(200).send(token);
         } else {
             // Authentication failed
-            reply.send(401).send({ error: 'Invalid email or password' });
+            return reply.status(401).send({ error: 'Invalid email or password' });
         }
     });
 }
