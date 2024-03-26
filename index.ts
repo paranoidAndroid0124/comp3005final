@@ -29,6 +29,22 @@ const main = async () => {
   // *** Set up and start Fastify server *** //
   const fastify = Fastify({ logger: true });
 
+  fastify.register(require('@fastify/jwt'), {
+    secret: process.env.JWT_SECRET
+  });
+
+  // hook that will run before every request
+  fastify.decorate('authenticate', async (request, reply) => {
+    try {
+      // verify the token
+      await request.jwtVerify();
+    } catch (err) {
+      reply.send(err); // return and status ?
+    }
+  });
+
+  // TODO: https://www.npmjs.com/package/@fastify/jwt
+
   // Declare a route
   fastify.get("/", async (request, reply) => {
     return { hello: "world" };
