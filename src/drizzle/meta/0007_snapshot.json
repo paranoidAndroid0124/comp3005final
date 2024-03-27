@@ -1,5 +1,5 @@
 {
-  "id": "dff4748c-e771-46bf-8e3c-badc991d00a6",
+  "id": "a88c83a5-1e7a-4b5b-9a64-c90168d10c19",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -44,8 +44,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "member_id": {
-          "name": "member_id",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -89,15 +89,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "billingInformation_member_id_member_member_id_fk": {
-          "name": "billingInformation_member_id_member_member_id_fk",
+        "billingInformation_user_id_users_user_id_fk": {
+          "name": "billingInformation_user_id_users_user_id_fk",
           "tableFrom": "billingInformation",
-          "tableTo": "member",
+          "tableTo": "users",
           "columnsFrom": [
-            "member_id"
+            "user_id"
           ],
           "columnsTo": [
-            "member_id"
+            "user_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -172,14 +172,14 @@
       "name": "member",
       "schema": "",
       "columns": {
-        "member_id": {
-          "name": "member_id",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "health_metrix": {
-          "name": "health_metrix",
+        "health_metric": {
+          "name": "health_metric",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -190,8 +190,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "fitness_achivements": {
-          "name": "fitness_achivements",
+        "fitness_achievements": {
+          "name": "fitness_achievements",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -205,12 +205,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "member_member_id_users_user_id_fk": {
-          "name": "member_member_id_users_user_id_fk",
+        "member_user_id_users_user_id_fk": {
+          "name": "member_user_id_users_user_id_fk",
           "tableFrom": "member",
           "tableTo": "users",
           "columnsFrom": [
-            "member_id"
+            "user_id"
           ],
           "columnsTo": [
             "user_id"
@@ -226,8 +226,8 @@
       "name": "membershipCard",
       "schema": "",
       "columns": {
-        "member_id": {
-          "name": "member_id",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -241,15 +241,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "membershipCard_member_id_member_member_id_fk": {
-          "name": "membershipCard_member_id_member_member_id_fk",
+        "membershipCard_user_id_users_user_id_fk": {
+          "name": "membershipCard_user_id_users_user_id_fk",
           "tableFrom": "membershipCard",
-          "tableTo": "member",
+          "tableTo": "users",
           "columnsFrom": [
-            "member_id"
+            "user_id"
           ],
           "columnsTo": [
-            "member_id"
+            "user_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -268,8 +268,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "member_id": {
-          "name": "member_id",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -289,15 +289,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "paymentInfo_member_id_member_member_id_fk": {
-          "name": "paymentInfo_member_id_member_member_id_fk",
+        "paymentInfo_user_id_users_user_id_fk": {
+          "name": "paymentInfo_user_id_users_user_id_fk",
           "tableFrom": "paymentInfo",
-          "tableTo": "member",
+          "tableTo": "users",
           "columnsFrom": [
-            "member_id"
+            "user_id"
           ],
           "columnsTo": [
-            "member_id"
+            "user_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"

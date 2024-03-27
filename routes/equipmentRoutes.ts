@@ -18,6 +18,7 @@ export async function equipmentRoutes(fastify, options) {
        try {
            // Logic to return a specific equipment
            const { id } = request.params;
+           //  SELECT * FROM equipments WHERE equipment_id = 'id';
            const equipment = await db.select().from(equipments).where(eq(equipments.equipment_id, id)).execute();
 
            if (equipment.length === 0) {

@@ -30,7 +30,7 @@ export const userRoles = pgTable("userRoles", {
 
 export const billingInformation = pgTable("billingInformation", {
   billing_id: serial("billing_id").primaryKey(),
-  member_id: integer("member_id").references(() => members.user_id),
+  user_id: integer("user_id").references(() => users.user_id),
   periodicity: text("periodicity").notNull(),
   payment_info: text("paymentInfo").notNull(), // TODO: this will be a table
   card_type: text("cardType"),
@@ -40,22 +40,22 @@ export const billingInformation = pgTable("billingInformation", {
 });
 
 export const members = pgTable("member", {
-  user_id: integer("member_id").references(() => users.user_id),
-  health_metric: text("health_metrix"),
+  user_id: integer("user_id").references(() => users.user_id),
+  health_metric: text("health_metric"),
   fitness_goals: text("fitness_goals"),
-  fitness_achivements: text("fitness_achivements"), // TODO: fix typo achievements
+  fitness_achievements: text("fitness_achievements"),
   join_date: date("join_date"),
 });
 
 export const paymentInfo = pgTable("paymentInfo", {
   payment_id: serial("payment_id").primaryKey(),
-  member_id: integer("member_id").references(() => members.user_id),
+  user_id: integer("user_id").references(() => users.user_id),
   payment_date: date(`payment_date`),
   amount: integer("amount"),
 });
 
 export const membershipCard = pgTable("membershipCard", {
-  member_id: integer("member_id").references(() => members.user_id),
+  user_id: integer("user_id").references(() => users.user_id),
   nfc: text("nfc"),
 });
 

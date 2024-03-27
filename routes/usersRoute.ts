@@ -13,12 +13,12 @@ export async function usersRoute(fastify, options) {
 
         // Insert user into the database
         await db.insert(users).values({
-            email,
+            email: email,
             password: hashedPassword,
             first_name: firstName,
             last_name:lastName,
             phone_number: phoneNumber,
-            address
+            address: address
         }).execute();
 
         return reply.send(201);

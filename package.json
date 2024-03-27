@@ -20,7 +20,6 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.1",
     "fastify": "^4.26.2",
-    "fastify-jwt": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
     "postgres": "^3.4.3",

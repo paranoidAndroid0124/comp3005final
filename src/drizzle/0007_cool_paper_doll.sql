@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS "adminStaff" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "billingInformation" (
 	"billing_id" serial PRIMARY KEY NOT NULL,
-	"member_id" integer,
+	"user_id" integer,
 	"periodicity" text NOT NULL,
 	"paymentInfo" text NOT NULL,
 	"cardType" text,
@@ -27,21 +27,21 @@ CREATE TABLE IF NOT EXISTS "exercise" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "member" (
-	"member_id" integer,
-	"health_metrix" text,
+	"user_id" integer,
+	"health_metric" text,
 	"fitness_goals" text,
-	"fitness_achivements" text,
+	"fitness_achievements" text,
 	"join_date" date
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "membershipCard" (
-	"member_id" integer,
+	"user_id" integer,
 	"nfc" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "paymentInfo" (
 	"payment_id" serial PRIMARY KEY NOT NULL,
-	"member_id" integer,
+	"user_id" integer,
 	"payment_date" date,
 	"amount" integer
 );
@@ -85,25 +85,25 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "billingInformation" ADD CONSTRAINT "billingInformation_member_id_member_member_id_fk" FOREIGN KEY ("member_id") REFERENCES "member"("member_id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "billingInformation" ADD CONSTRAINT "billingInformation_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "member" ADD CONSTRAINT "member_member_id_users_user_id_fk" FOREIGN KEY ("member_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "member" ADD CONSTRAINT "member_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "membershipCard" ADD CONSTRAINT "membershipCard_member_id_member_member_id_fk" FOREIGN KEY ("member_id") REFERENCES "member"("member_id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "membershipCard" ADD CONSTRAINT "membershipCard_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "paymentInfo" ADD CONSTRAINT "paymentInfo_member_id_member_member_id_fk" FOREIGN KEY ("member_id") REFERENCES "member"("member_id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "paymentInfo" ADD CONSTRAINT "paymentInfo_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
