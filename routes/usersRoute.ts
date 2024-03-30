@@ -32,7 +32,7 @@ export async function usersRoute(fastify, options) {
 
         if (user && await bcrypt.compare(password, user[0].password)) {
             // Passwords match, create JWT
-            const token = jwt.sgin({ userid: user[0].user_id}, process.env.JWT_SECRET, { expiresIn: '1h'});
+            const token = jwt.sign({ userid: user[0].user_id}, process.env.JWT_SECRET, { expiresIn: '1h'});
             return reply.status(200).send(token);
         } else {
             // Authentication failed
