@@ -2,8 +2,6 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
-import { promisify } from "node:util";
-import { createInterface } from "node:readline";
 import Fastify from "fastify";
 
 import { membersRoutes } from "./routes/membersRoutes";
@@ -61,7 +59,7 @@ const main = async () => {
   console.log("Starting server");
   // Run the server!
   try {
-    await fastify.listen({ port: 3000 });
+    await fastify.listen({ port: 3001 });
     const address = fastify.server.address();
     const port = typeof address === "string" ? address : address?.port;
 
@@ -84,7 +82,7 @@ async function insertInitialData(): Promise<void> {
   // create first user
   const result = await db.insert(users).values({first_name: 'test', last_name: 'User', email: 'john.doe@example.com', password: 'test', phone_number: '819-666-1234', address: 'jane street'}).returning({data: users.user_id }).execute();
   console.log("Result:", result[0].data);
-  await db.insert(members).values({user_id: result[0].data, health_metric: 'health', fitness_goals: 'blah', fitness_achivements: 'none', join_date: '2023-09-01'})
+  await db.insert(members).values({user_id: result[0].data, health_metric: 'health', fitness_goals: 'blah', fitness_achievements: 'none', join_date: '2023-09-01'})
 
   // await db.insert(student).values({first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@example.com', enrollment_date: '2023-09-01'}).execute();
   // await db.insert(student).values({first_name: 'Jim', last_name: 'Beam', email: 'jim.beam@example.com', enrollment_date: '2023-09-02'}).execute();
