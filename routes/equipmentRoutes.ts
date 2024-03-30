@@ -7,10 +7,10 @@ export async function equipmentRoutes(fastify, options) {
        try {
            // Logic to return all equipment
            const equipmentsList = await db.select().from(equipments).execute();
-           reply.send(equipmentsList);
+           return reply.status(200).send(equipmentsList);
        } catch (error) {
            // handle database errors
-           reply.send(500).send( { error: 'Internal Server Error'});
+           return reply.status(500).send( { error: 'Internal Server Error'});
        }
     });
 
@@ -18,16 +18,17 @@ export async function equipmentRoutes(fastify, options) {
        try {
            // Logic to return a specific equipment
            const { id } = request.params;
+           //  SELECT * FROM equipments WHERE equipment_id = 'id';
            const equipment = await db.select().from(equipments).where(eq(equipments.equipment_id, id)).execute();
 
            if (equipment.length === 0) {
-               reply.status(404).send( {error: 'Equipment not found'});
+               return reply.status(404).send( {error: 'Equipment not found'});
            } else {
-               reply.send(equipment[0]);
+               return reply.status(200).send(equipment[0]);
            }
        } catch (error) {
            // handle database errors
-           reply.status(500).send({ error: 'Internal Server Error'});
+           return reply.status(500).send({ error: 'Internal Server Error'});
        }
     });
 
@@ -36,10 +37,10 @@ export async function equipmentRoutes(fastify, options) {
            // Logic to create a new equipment
            const newEquipmentData = request.body;
            const newEquipment = await db.insert(equipments).values(newEquipmentData).execute();
-           reply.status(201).send(newEquipment);
+           return reply.status(201).send(newEquipment);
        } catch (error) {
            // handle database errors
-           reply.status(500).send( { error: 'Internal Server Error' })
+           return reply.status(500).send( { error: 'Internal Server Error' })
        }
     });
 

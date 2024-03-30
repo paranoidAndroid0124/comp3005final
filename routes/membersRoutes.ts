@@ -1,24 +1,27 @@
 import { db } from '../db';
-import {eq} from "drizzle-orm"; // Update with the correct path to your db connection
+import { eq } from "drizzle-orm";
 import { members } from '../src/drizzle/schema';
+import {FastifyInstance} from "fastify";
 
-export async function membersRoutes(fastify, options) {
+export async function membersRoutes(fastify: FastifyInstance, options?) {
     fastify.get('/member', async (request, reply) => {
+        console.log("In members route");
         try {
             // Logic to return all members
             const membersList = await db.select().from(members).execute();
-            reply.send(membersList);
+            return reply.status(200).send(membersList);
         } catch (error) {
+            console.log("Error in member route");
             // handle database errors
-            reply.send(500).send( {error: 'Internal Server Error'});
+            return reply.status(500).send( {error: 'Internal Server Error'});
         }
     });
 
-    fastify.get('/member/:id', async (request, reply) => {
+    fastify.get<{Params: {id: number}}>('/member/:id', async (request, reply) => {
         try {
             // Logic to return a specific member
-            const { id } = request.params;
-            const member = await db.select().from(members).where(eq(members.member_id, id)).execute();
+            const id  = request.params.id;
+            const member = await db.select().from(members).where(eq(members.user_id, id)).execute();
 
             if (member.length === 0) {
                 reply.status(404).send({ error: 'Member not found' });

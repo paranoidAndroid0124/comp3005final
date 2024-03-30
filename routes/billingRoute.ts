@@ -22,7 +22,7 @@ export async function billingRoute(fastify, options) {
            return reply.send(billingInfo);
        } catch (error) {
            // handle database errors
-           reply.send(500).send( {error: 'Internal Server Error'});
+           return reply.status(500).send( {error: 'Internal Server Error'});
        }
     });
 }

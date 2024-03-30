@@ -6,16 +6,22 @@
   "scripts": {
     "start": "ts-node index.ts",
     "build": "yarn drizzle-kit generate:pg",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "ts-node migrateDB.ts",
+    "sql": "yarn drizzle-kit generate:pg"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@drizzle/store": "^1.5.3",
+    "@fastify/cors": "^9.0.1",
+    "@fastify/jwt": "^8.0.0",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.1",
     "fastify": "^4.26.2",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
     "postgres": "^3.4.3",
     "ts-node": "^10.9.2",
@@ -23,6 +29,8 @@
     "yarn": "^1.22.21"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.25",
     "drizzle-kit": "^0.20.14"
   }

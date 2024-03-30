@@ -1,5 +1,5 @@
 {
-  "id": "ae1cd4fa-8661-41a6-aeef-682c961677fd",
+  "id": "a88c83a5-1e7a-4b5b-9a64-c90168d10c19",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -8,43 +8,31 @@
       "name": "adminStaff",
       "schema": "",
       "columns": {
-        "staff_id": {
-          "name": "staff_id",
-          "type": "serial",
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
-        },
-        "first_name": {
-          "name": "first_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "last_name": {
-          "name": "last_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "adminStaff_email_unique": {
-          "name": "adminStaff_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+      "foreignKeys": {
+        "adminStaff_user_id_users_user_id_fk": {
+          "name": "adminStaff_user_id_users_user_id_fk",
+          "tableFrom": "adminStaff",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
-      }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "billingInformation": {
       "name": "billingInformation",
@@ -55,6 +43,12 @@
           "type": "serial",
           "primaryKey": true,
           "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         },
         "periodicity": {
           "name": "periodicity",
@@ -94,7 +88,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "billingInformation_user_id_users_user_id_fk": {
+          "name": "billingInformation_user_id_users_user_id_fk",
+          "tableFrom": "billingInformation",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -164,38 +172,14 @@
       "name": "member",
       "schema": "",
       "columns": {
-        "member_id": {
-          "name": "member_id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "billing_id": {
-          "name": "billing_id",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "first_name": {
-          "name": "first_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "last_name": {
-          "name": "last_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "address": {
-          "name": "address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "health_metrix": {
-          "name": "health_metrix",
+        "health_metric": {
+          "name": "health_metric",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -206,8 +190,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "fitness_achivements": {
-          "name": "fitness_achivements",
+        "fitness_achievements": {
+          "name": "fitness_achievements",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -217,59 +201,33 @@
           "type": "date",
           "primaryKey": false,
           "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "phone_number": {
-          "name": "phone_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "member_billing_id_billingInformation_billing_id_fk": {
-          "name": "member_billing_id_billingInformation_billing_id_fk",
+        "member_user_id_users_user_id_fk": {
+          "name": "member_user_id_users_user_id_fk",
           "tableFrom": "member",
-          "tableTo": "billingInformation",
+          "tableTo": "users",
           "columnsFrom": [
-            "billing_id"
+            "user_id"
           ],
           "columnsTo": [
-            "billing_id"
+            "user_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "member_email_unique": {
-          "name": "member_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "membershipCard": {
       "name": "membershipCard",
       "schema": "",
       "columns": {
-        "member_id": {
-          "name": "member_id",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -283,15 +241,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "membershipCard_member_id_member_member_id_fk": {
-          "name": "membershipCard_member_id_member_member_id_fk",
+        "membershipCard_user_id_users_user_id_fk": {
+          "name": "membershipCard_user_id_users_user_id_fk",
           "tableFrom": "membershipCard",
-          "tableTo": "member",
+          "tableTo": "users",
           "columnsFrom": [
-            "member_id"
+            "user_id"
           ],
           "columnsTo": [
-            "member_id"
+            "user_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -310,8 +268,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "member_id": {
-          "name": "member_id",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -331,15 +289,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "paymentInfo_member_id_member_member_id_fk": {
-          "name": "paymentInfo_member_id_member_member_id_fk",
+        "paymentInfo_user_id_users_user_id_fk": {
+          "name": "paymentInfo_user_id_users_user_id_fk",
           "tableFrom": "paymentInfo",
-          "tableTo": "member",
+          "tableTo": "users",
           "columnsFrom": [
-            "member_id"
+            "user_id"
           ],
           "columnsTo": [
-            "member_id"
+            "user_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -347,6 +305,36 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "roles": {
+      "name": "roles",
+      "schema": "",
+      "columns": {
+        "role_id": {
+          "name": "role_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "role_name": {
+          "name": "role_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "roles_role_name_unique": {
+          "name": "roles_role_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "role_name"
+          ]
+        }
+      }
     },
     "room": {
       "name": "room",
@@ -380,14 +368,117 @@
       "name": "trainer",
       "schema": "",
       "columns": {
-        "trainer_id": {
-          "name": "trainer_id",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "trainer_user_id_users_user_id_fk": {
+          "name": "trainer_user_id_users_user_id_fk",
+          "tableFrom": "trainer",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "userRoles": {
+      "name": "userRoles",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role_id": {
+          "name": "role_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "userRoles_user_id_users_user_id_fk": {
+          "name": "userRoles_user_id_users_user_id_fk",
+          "tableFrom": "userRoles",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "userRoles_role_id_roles_role_id_fk": {
+          "name": "userRoles_role_id_roles_role_id_fk",
+          "tableFrom": "userRoles",
+          "tableTo": "roles",
+          "columnsFrom": [
+            "role_id"
+          ],
+          "columnsTo": [
+            "role_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "first_name": {
+          "name": "first_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone_number": {
+          "name": "phone_number",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -397,18 +488,20 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "phone_number": {
-          "name": "phone_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
     }
   },
   "enums": {},
