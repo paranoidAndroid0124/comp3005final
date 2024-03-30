@@ -3,8 +3,10 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 import Fastify from "fastify";
+import cors from '@fastify/cors'
 
 import { membersRoutes } from "./routes/membersRoutes";
+import { usersRoutes} from "./routes/usersRoutes";
 import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
 import {members} from "./src/drizzle/schema";
@@ -26,6 +28,8 @@ const main = async () => {
 
   // *** Set up and start Fastify server *** //
   const fastify = Fastify({ logger: true });
+
+  fastify.register(cors);
 
   fastify.register(require('@fastify/jwt'), {
     secret: process.env.JWT_SECRET
@@ -49,6 +53,7 @@ const main = async () => {
   });
 
   await membersRoutes(fastify);
+  await usersRoutes(fastify);
   // fastify.register(membersRoutes); // these route don't work
   // fastify.register(equipmentRoutes);
   // fastify.register(billingRoute);

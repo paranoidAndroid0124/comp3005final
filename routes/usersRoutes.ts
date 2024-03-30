@@ -2,12 +2,27 @@ import "dotenv/config";
 import { db } from '../db';
 import { eq } from "drizzle-orm";
 import { users } from "../src/drizzle/schema";
-import { bcrypt } from 'bcrypt';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import {FastifyInstance} from "fastify";
 
-export async function usersRoute(fastify, options) {
+interface RegisterBody {
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    phoneNumber: string
+    address: string
+}
+
+interface LoginBody {
+    email: string,
+    password: string
+}
+
+export async function usersRoutes(fastify: FastifyInstance, options?) {
     // Registration endpoint
-    fastify.post('/register', async (request, reply) => {
+    fastify.post<{Body: RegisterBody}>('/register', async (request, reply) => {
         const { email, password, firstName, lastName, phoneNumber, address} = request.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -24,7 +39,7 @@ export async function usersRoute(fastify, options) {
         return reply.send(201);
     });
 
-    fastify.post('/login', async  (request, reply) => {
+    fastify.post<{Body: LoginBody}>('/login', async  (request, reply) => {
         const { email, password } = request.body;
 
         // Retrieve user by email
