@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { db } from '../db';
-import { eq } from "drizzle-orm";
-import {members, users} from "../src/drizzle/schema";
+import {count, eq} from "drizzle-orm";
+import {adminStaff, members, users} from "../src/drizzle/schema";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {FastifyInstance} from "fastify";
@@ -37,16 +37,22 @@ export async function usersRoutes(fastify: FastifyInstance, options?) {
                 address: address
             }).returning( {insertedID: users.user_id}).execute();
 
-            console.log("Debug:", newUser[0].insertedID);
-            // insert new user as a member by default
-            await db.insert(members).values({
-                user_id: newUser[0].insertedID,
-                health_metric: 'unknown',
-                fitness_goals: 'unknown',
-                fitness_achievements: 'none',
-                join_date: new Date().toISOString().slice(0, 10)
-            });
+            // Check if this is the first user
+            const userCount = await db.select( {count: count()}).from(users).execute();
 
+            if (userCount[0].count === 1) {
+                // This is the first user, insert them into the adminStaff table
+                await db.insert(adminStaff).values({user_id: newUser[0].insertedID});
+            } else {
+                // insert new user as a member by default
+                await db.insert(members).values({
+                    user_id: newUser[0].insertedID,
+                    health_metric: 'unknown',
+                    fitness_goals: 'unknown',
+                    fitness_achievements: 'none',
+                    join_date: new Date().toISOString().slice(0, 10)
+                });
+            }
             return reply.send(201);
         } catch (error) {
             console.error("Error during registration", error);
