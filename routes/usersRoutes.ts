@@ -47,9 +47,9 @@ export async function usersRoutes(fastify: FastifyInstance, options?) {
                 // insert new user as a member by default
                 await db.insert(members).values({
                     user_id: newUser[0].insertedID,
-                    health_metric: 'unknown',
-                    fitness_goals: 'unknown',
-                    fitness_achievements: 'none',
+                    health_metric: '',
+                    fitness_goals: '',
+                    fitness_achievements: '',
                     join_date: new Date().toISOString().slice(0, 10)
                 });
             }
