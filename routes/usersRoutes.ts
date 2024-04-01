@@ -44,7 +44,7 @@ export async function usersRoutes(fastify: FastifyInstance, options?) {
                 health_metric: 'unknown',
                 fitness_goals: 'unknown',
                 fitness_achievements: 'none',
-                join_date: '2023-09-01' // TODO: get current time //new Date().toISOString().slice(0, 10)
+                join_date: new Date().toISOString().slice(0, 10)
             });
 
             return reply.send(201);
