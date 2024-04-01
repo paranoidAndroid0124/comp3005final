@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { db } from '../db';
 import { eq } from "drizzle-orm";
-import { users } from "../src/drizzle/schema";
+import {members, users} from "../src/drizzle/schema";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {FastifyInstance} from "fastify";
@@ -23,20 +23,37 @@ interface LoginBody {
 export async function usersRoutes(fastify: FastifyInstance, options?) {
     // Registration endpoint
     fastify.post<{Body: RegisterBody}>('/register', async (request, reply) => {
-        const { email, password, firstName, lastName, phoneNumber, address} = request.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        try {
+            const { email, password, firstName, lastName, phoneNumber, address} = request.body;
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Insert user into the database
-        await db.insert(users).values({
-            email: email,
-            password: hashedPassword,
-            first_name: firstName,
-            last_name:lastName,
-            phone_number: phoneNumber,
-            address: address
-        }).execute();
+            // Insert user into the database
+            const newUser = await db.insert(users).values({
+                email: email,
+                password: hashedPassword,
+                first_name: firstName,
+                last_name:lastName,
+                phone_number: phoneNumber,
+                address: address
+            }).returning( {insertedID: users.user_id}).execute();
 
-        return reply.send(201);
+            console.log("Debug:", newUser[0].insertedID);
+            // insert new user as a member by default
+            await db.insert(members).values({
+                user_id: newUser[0].insertedID,
+                health_metric: 'unknown',
+                fitness_goals: 'unknown',
+                fitness_achievements: 'none',
+                join_date: '2023-09-01' // TODO: get current time //new Date().toISOString().slice(0, 10)
+            });
+
+            return reply.send(201);
+        } catch (error) {
+            console.error("Error during registration", error);
+
+            return reply.send(500);
+        }
+
     });
 
     fastify.post<{Body: LoginBody}>('/login', async  (request, reply) => {
