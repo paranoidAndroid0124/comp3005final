@@ -3,6 +3,12 @@ import { eq } from "drizzle-orm";
 import { members } from '../src/drizzle/schema';
 import {FastifyInstance} from "fastify";
 
+interface profileBody {
+    healthMetric: string,
+    fitnessGoals: string,
+    fitnessAchievements: string
+}
+
 export async function membersRoutes(fastify: FastifyInstance, options?) {
     fastify.get('/member', async (request, reply) => {
         console.log("In members route");
@@ -31,6 +37,19 @@ export async function membersRoutes(fastify: FastifyInstance, options?) {
         } catch (error) {
             // handle database errors
             reply.status(500).send({ error: 'Internal Server Error'});
+        }
+    });
+
+    fastify.post<{Params: {id:number}, Body: profileBody}>('/member/:id/update', async (request, reply) => {
+        try {
+            const {healthMetric, fitnessGoals, fitnessAchievements} = request.body;
+            // Logic to update a specific member's data
+            const id = request.params.id;
+            const member = await db.update(members).set({health_metric: healthMetric, fitness_goals: fitnessGoals, fitness_achievements: fitnessAchievements}).where(eq(members.user_id, id)).returning().execute();
+
+            reply.send(member[0]);
+        }catch (error) {
+            reply.status(500).send({error: 'Internal Server Error'})
         }
     });
 
