@@ -32,7 +32,7 @@ export async function membersRoutes(fastify: FastifyInstance, options?) {
             if (member.length === 0) {
                 reply.status(404).send({ error: 'Member not found' });
             } else {
-                reply.send(member[0])
+                reply.send(member[0]);
             }
         } catch (error) {
             // handle database errors
