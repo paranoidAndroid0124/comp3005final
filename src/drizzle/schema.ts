@@ -68,7 +68,7 @@ export const equipments = pgTable("equipment", {
 
 export const timeSlots = pgTable("timeSlots", {
   Slot_id: serial("Slot_id").primaryKey(),
-  train_id: integer("trainer_Id"),
+  trainer_id: integer("trainer_Id"),
   start_time: date("start_time").notNull(),
   end_time: date("end_time").notNull(),
   current_enrollment: integer("current_enrollment"),

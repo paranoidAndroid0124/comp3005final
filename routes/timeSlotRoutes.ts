@@ -41,9 +41,19 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
 
     fastify.post<{Params: {id: number}, Body: timeSlotBody}>('/timeslots/:id/add', async (request, reply) => {
         try {
+            const { trainer, startTime, endTime, capacity, location} = request.body;
+
+            // TODO: verify that the trainer is available at this time
             // Logic to add a timeslot
-            const id : number = request.params.id;
-            const timeslot = await db.update(timeSlots).set({}).where(eq())
+            const timeslot = await db.insert(timeSlots).value({
+                trainer_id: trainer,
+                start_time: startTime,
+                end_time: endTime,
+                current_enrollment: 0,
+                capacity: capacity,
+                location: location
+            }).returning( {slotID: timeslot.Slot_id}).execute();
+            return reply.status(201).send(slotID);
         } catch (error) {
             reply.status(500).send({error: 'Internal Server Error'})
         }
