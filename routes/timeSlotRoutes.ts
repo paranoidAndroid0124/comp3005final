@@ -1,11 +1,19 @@
 import {FastifyInstance} from "fastify";
-import {members, timeSlots} from "../src/drizzle/schema";
+import {bookings, timeSlots} from "../src/drizzle/schema";
 import {db} from "../db";
-import * as repl from "repl";
 import {eq} from "drizzle-orm";
 
-interface timeSlotBody {
+interface timeSlotRegisterBody {
+    userID: number,
+    timeSlotsID: number,
+}
 
+interface timeSlotBody{
+    trainer: number,
+    startTime: string,
+    endTime: string,
+    capacity: number,
+    location: string,
 }
 
 export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
@@ -39,15 +47,15 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
         }
     });
 
-    fastify.post<{Body: timeSlotBody}>('/timeslot/register', async (request, reply) => {
+    fastify.post<{Body: timeSlotRegisterBody}>('/timeslot/register', async (request, reply) => {
         try {
             // would it better in body or as params ?
-            const { userID, timeslotID } = request.body;
+            const { userID, timeSlotsID } = request.body;
 
             //TODO: check if userID and timeSlotID is valid
-            await db.insert(bookings).value({
+            await db.insert(bookings).values({
                 user_id: userID,
-                slot_id: slotID
+                slot_id: timeSlotsID
             }).execute();
 
             return reply.status(201);
@@ -63,15 +71,15 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
             // TODO: verify that the trainer is available at this time
             // TODO: verify that the user is allowed to add a timeslot
             // Logic to add a timeslot
-            const timeslot = await db.insert(timeSlots).value({
+            const timeslot = await db.insert(timeSlots).values({
                 trainer_id: trainer,
                 start_time: startTime,
                 end_time: endTime,
                 current_enrollment: 0,
                 capacity: capacity,
                 location: location
-            }).returning( {slotID: timeslot.slot_id}).execute();
-            return reply.status(201).send(slotID);
+            }).returning( {slotID: timeSlots.slot_id}).execute();
+            return reply.status(201).send(timeslot[0].slotID);
         } catch (error) {
             return reply.status(500).send({error: 'Internal Server Error'});
         }
@@ -81,7 +89,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
         try {
            const id : number = request.params.id;
            // Logic to delete a timeslot
-            await db.delete.from(timeSlots).where(eq(slot_id, id)).execute();
+            await db.delete(timeSlots).where(eq(timeSlots.slot_id, id)).execute();
 
            // TODO: also delete in the bookings table
            // or does the reference do that automatically?
