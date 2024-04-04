@@ -71,7 +71,8 @@ export async function usersRoutes(fastify: FastifyInstance, options?) {
         if (user && await bcrypt.compare(password, user[0].password)) {
             // Passwords match, create JWT
             const token = jwt.sign({ userid: user[0].user_id}, process.env.JWT_SECRET, { expiresIn: '1h'});
-            return reply.status(200).send(token);
+            // return reply.status(200).send(token);
+            return reply.status(200).send(user[0].user_id);
         } else {
             // Authentication failed
             return reply.status(401).send({ error: 'Invalid email or password' });
