@@ -26,24 +26,42 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
         try {
             // Logic to return a specific member
             const id : number = request.params.id;
-            const timeslot = await db.select().from(timeSlots).where(eq(timeSlots.Slot_id, id)).execute()
+            const timeslot = await db.select().from(timeSlots).where(eq(timeSlots.slot_id, id)).execute()
 
-            if (timeslot.length ===0) {
-                reply.status(404).send({error: 'Timeslot does not exist'});
+            if (timeslot.length === 0) {
+                return reply.status(404).send({error: 'Timeslot does not exist'});
             } else {
-                reply.send(timeslot[0]);
+                return reply.send(timeslot[0]);
             }
         } catch (error) {
             // handle database errors
-            reply.status(500).send({error: 'Internal Server Error'});
+            return reply.status(500).send({error: 'Internal Server Error'});
         }
     });
 
-    fastify.post<{Params: {id: number}, Body: timeSlotBody}>('/timeslots/:id/add', async (request, reply) => {
+    fastify.post<{Body: timeSlotBody}>('/timeslot/register', async (request, reply) => {
+        try {
+            // would it better in body or as params ?
+            const { userID, timeslotID } = request.body;
+
+            //TODO: check if userID and timeSlotID is valid
+            await db.insert(bookings).value({
+                user_id: userID,
+                slot_id: slotID
+            }).execute();
+
+            return reply.status(201);
+        } catch (error) {
+            return reply.status(500).send({error: 'Internal Server Error'});
+        }
+    });
+
+    fastify.post<{Body: timeSlotBody}>('/timeslots/add', async (request, reply) => {
         try {
             const { trainer, startTime, endTime, capacity, location} = request.body;
 
             // TODO: verify that the trainer is available at this time
+            // TODO: verify that the user is allowed to add a timeslot
             // Logic to add a timeslot
             const timeslot = await db.insert(timeSlots).value({
                 trainer_id: trainer,
@@ -52,10 +70,24 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
                 current_enrollment: 0,
                 capacity: capacity,
                 location: location
-            }).returning( {slotID: timeslot.Slot_id}).execute();
+            }).returning( {slotID: timeslot.slot_id}).execute();
             return reply.status(201).send(slotID);
         } catch (error) {
-            reply.status(500).send({error: 'Internal Server Error'})
+            return reply.status(500).send({error: 'Internal Server Error'});
+        }
+    });
+
+    fastify.post<{Params: {id: number}}>('/timeslots/:id/remove', async (request, reply) => {
+        try {
+           const id : number = request.params.id;
+           // Logic to delete a timeslot
+            await db.delete.from(timeSlots).where(eq(slot_id, id)).execute();
+
+           // TODO: also delete in the bookings table
+           // or does the reference do that automatically?
+        } catch (error) {
+            // handle database errors
+            return reply.status(500).send({error: 'Internal Server Errror'});
         }
     });
 }
