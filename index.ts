@@ -4,6 +4,7 @@ import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 import Fastify from "fastify";
 import cors from '@fastify/cors'
+import fCookie from '@fastify/cookie'
 
 import { membersRoutes } from "./routes/membersRoutes";
 import { usersRoutes} from "./routes/usersRoutes";
@@ -31,17 +32,25 @@ const main = async () => {
 
   fastify.register(cors);
 
-  fastify.register(require('@fastify/jwt'), {
-    secret: process.env.JWT_SECRET
-  });
+  // fastify.register(require('@fastify/jwt'), {
+  //   secret: process.env.JWT_SECRET
+  // });
+
+  const fp = require("fastify-plugin")
+
+  module.exports = fp(async function(fastify, opts) {
+    fastify.register(require("@fastify/jwt"),{
+      secret: process.env.JWT_SECRET
+    })
+  })
 
   // hook that will run before every request
-  fastify.decorate('authenticate', async (request, reply) => {
+  fastify.decorate("authenticate", async function (request, reply) {
     try {
       // verify the token
       await request.jwtVerify();
-    } catch (err) {
-      reply.send(err); // return and status ?
+    } catch (error) {
+      return reply.status(500).send({error: 'Invalid jwt token'});
     }
   });
 

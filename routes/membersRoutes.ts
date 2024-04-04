@@ -10,7 +10,8 @@ interface profileBody {
 }
 
 export async function membersRoutes(fastify: FastifyInstance, options?) {
-    fastify.get('/member', async (request, reply) => {
+    //preValidation or onRequest ?
+    fastify.get('/member', {preValidation: [fastify.authenticate]}, async (request, reply) => {
         console.log("In members route");
         try {
             // Logic to return all members
