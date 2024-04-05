@@ -1,8 +1,9 @@
 import { db } from '../db';
 import { eq } from "drizzle-orm";
 import { members } from '../src/drizzle/schema';
-import {FastifyInstance} from "fastify";
-import "../src/authenticate";
+import {FastifyInstance, FastifyRequest} from "fastify";
+import {onRequestHookHandler} from "fastify/types/hooks";
+import jwt from 'jsonwebtoken';
 
 interface profileBody {
     healthMetric: string,
@@ -10,10 +11,39 @@ interface profileBody {
     fitnessAchievements: string
 }
 
+interface JwtPayload {
+    userid: number
+}
+
+interface AuthRequest extends FastifyRequest{
+   userid: number
+}
+
+const  test: onRequestHookHandler = (request, reply) => {
+   console.log("in test function");
+    const headerValue = request.headers.authorization;
+
+    if (!headerValue) {
+        console.log("reply 401 cause invalid header");
+        return reply.status(401).send();
+    }
+    try {
+        console.log('verify token');
+        // Bearer token
+        const payload = jwt.verify( headerValue, process.env.JWT_SECRET) as JwtPayload;
+        // Get the payload and store
+        (request as AuthRequest).userid = payload.userid;
+    } catch (error) {
+        return reply.status(401);
+    }
+}
+
 export async function membersRoutes(fastify: FastifyInstance, options?) {
     //preValidation or onRequest ?
-    fastify.get('/member', {preValidation: [fastify.authenticate]}, async (request, reply) => {
+    fastify.get('/member', {onRequest: [test]}, async (request, reply) => {
         console.log("In members route");
+        const authRequest = request as AuthRequest;
+        console.log('userID', authRequest.userid);
         try {
             // Logic to return all members
             const membersList = await db.select().from(members).execute();

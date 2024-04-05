@@ -3,6 +3,6 @@
     "esModuleInterop": true,
   },
   "include": [
-    "src/authenticate.d.ts"
+    "./authenticate.d.ts"
   ]
 }
