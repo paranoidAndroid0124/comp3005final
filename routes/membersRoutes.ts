@@ -2,6 +2,7 @@ import { db } from '../db';
 import { eq } from "drizzle-orm";
 import { members } from '../src/drizzle/schema';
 import {FastifyInstance} from "fastify";
+import "../src/authenticate";
 
 interface profileBody {
     healthMetric: string,

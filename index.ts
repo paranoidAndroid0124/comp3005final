@@ -45,7 +45,7 @@ const main = async () => {
   })
 
   // hook that will run before every request
-  fastify.decorate("authenticate", async function (request, reply) {
+  fastify.decorate("authenticate", async (request, reply)  => {
     try {
       // verify the token
       await request.jwtVerify();
