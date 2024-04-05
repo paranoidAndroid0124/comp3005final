@@ -1,5 +1,5 @@
 {
-  "id": "a88c83a5-1e7a-4b5b-9a64-c90168d10c19",
+  "id": "230cc026-ed0b-480d-a589-315471fa1f0b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -98,6 +98,55 @@
           ],
           "columnsTo": [
             "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "bookings": {
+      "name": "bookings",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "slot_id": {
+          "name": "slot_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "bookings_user_id_users_user_id_fk": {
+          "name": "bookings_user_id_users_user_id_fk",
+          "tableFrom": "bookings",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "bookings_slot_id_timeSlots_slot_id_fk": {
+          "name": "bookings_slot_id_timeSlots_slot_id_fk",
+          "tableFrom": "bookings",
+          "tableTo": "timeSlots",
+          "columnsFrom": [
+            "slot_id"
+          ],
+          "columnsTo": [
+            "slot_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -336,12 +385,12 @@
         }
       }
     },
-    "room": {
-      "name": "room",
+    "timeSlots": {
+      "name": "timeSlots",
       "schema": "",
       "columns": {
-        "room_id": {
-          "name": "room_id",
+        "slot_id": {
+          "name": "slot_id",
           "type": "serial",
           "primaryKey": true,
           "notNull": true
@@ -352,9 +401,33 @@
           "primaryKey": false,
           "notNull": false
         },
+        "start_time": {
+          "name": "start_time",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "current_enrollment": {
+          "name": "current_enrollment",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "capacity": {
           "name": "capacity",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "location": {
+          "name": "location",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
