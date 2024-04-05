@@ -53,7 +53,7 @@ export async function usersRoutes(fastify: FastifyInstance, options?) {
                     join_date: new Date().toISOString().slice(0, 10)
                 });
             }
-            return reply.status(201);
+            return reply.status(201).send();
         } catch (error) {
             console.error("Error during registration", error);
 
