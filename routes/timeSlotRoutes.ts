@@ -64,6 +64,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
         }
     });
 
+    // this would likely only be done by admin or trainer
     fastify.post<{Body: timeSlotBody}>('/timeslots/add', async (request, reply) => {
         try {
             const { trainer, startTime, endTime, capacity, location} = request.body;
