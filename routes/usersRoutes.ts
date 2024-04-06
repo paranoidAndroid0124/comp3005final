@@ -66,7 +66,7 @@ export async function usersRoutes(fastify: FastifyInstance, options?) {
                     });
                 }
             }
-            return reply.status(201);
+            return reply.status(201).send();
         } catch (error) {
             console.error("Error during registration", error);
 

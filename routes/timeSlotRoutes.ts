@@ -39,7 +39,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
             if (timeslot.length === 0) {
                 return reply.status(404).send({error: 'Timeslot does not exist'});
             } else {
-                return reply.send(timeslot[0]);
+                return reply.status(200).send(timeslot[0]);
             }
         } catch (error) {
             // handle database errors
@@ -58,7 +58,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
                 slot_id: timeSlotsID
             }).execute();
 
-            return reply.status(201);
+            return reply.status(201).send();
         } catch (error) {
             return reply.status(500).send({error: 'Internal Server Error'});
         }
