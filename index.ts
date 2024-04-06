@@ -32,30 +32,6 @@ const main = async () => {
 
   fastify.register(cors);
 
-  // fastify.register(require('@fastify/jwt'), {
-  //   secret: process.env.JWT_SECRET
-  // });
-
-  const fp = require("fastify-plugin")
-
-  module.exports = fp(async function(fastify, opts) {
-    fastify.register(require("@fastify/jwt"),{
-      secret: process.env.JWT_SECRET
-    })
-  })
-
-  // hook that will run before every request
-  fastify.decorate("authenticate", async (request, reply)  => {
-    try {
-      // verify the token
-      await request.jwtVerify();
-    } catch (error) {
-      return reply.status(500).send({error: 'Invalid jwt token'});
-    }
-  });
-
-  // TODO: https://www.npmjs.com/package/@fastify/jwt
-
   // Declare a route
   fastify.get("/", async (request, reply) => {
     return { hello: "world" };
