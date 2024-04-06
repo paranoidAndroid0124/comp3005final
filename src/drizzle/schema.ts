@@ -66,10 +66,19 @@ export const equipments = pgTable("equipment", {
   next_maintained: date("next_maintained").notNull(),
 });
 
-export const room = pgTable("room", {
-  room_id: serial("room_id").primaryKey(),
-  train_id: integer("trainer_Id"),
+export const timeSlots = pgTable("timeSlots", {
+  slot_id: serial("slot_id").primaryKey(),
+  trainer_id: integer("trainer_Id"),
+  start_time: date("start_time").notNull(),
+  end_time: date("end_time").notNull(),
+  current_enrollment: integer("current_enrollment"),
   capacity: integer("capacity"),
+  location: text("location")
+});
+
+export const bookings = pgTable("bookings", {
+  user_id: integer("user_id").references(() => users.user_id),
+  slot_id: integer("slot_id").references(() => timeSlots.slot_id)
 });
 
 export const trainer = pgTable("trainer", {

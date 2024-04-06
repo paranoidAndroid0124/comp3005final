@@ -13,6 +13,11 @@ CREATE TABLE IF NOT EXISTS "billingInformation" (
 	"expiry" date NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "bookings" (
+	"user_id" integer,
+	"slot_id" integer
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "equipment" (
 	"equipment_id" serial PRIMARY KEY NOT NULL,
 	"equipment_name" text,
@@ -52,10 +57,14 @@ CREATE TABLE IF NOT EXISTS "roles" (
 	CONSTRAINT "roles_role_name_unique" UNIQUE("role_name")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "room" (
-	"room_id" serial PRIMARY KEY NOT NULL,
+CREATE TABLE IF NOT EXISTS "timeSlots" (
+	"slot_id" serial PRIMARY KEY NOT NULL,
 	"trainer_Id" integer,
-	"capacity" integer
+	"start_time" date NOT NULL,
+	"end_time" date NOT NULL,
+	"current_enrollment" integer,
+	"capacity" integer,
+	"location" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "trainer" (
@@ -86,6 +95,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "billingInformation" ADD CONSTRAINT "billingInformation_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "bookings" ADD CONSTRAINT "bookings_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "bookings" ADD CONSTRAINT "bookings_slot_id_timeSlots_slot_id_fk" FOREIGN KEY ("slot_id") REFERENCES "timeSlots"("slot_id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

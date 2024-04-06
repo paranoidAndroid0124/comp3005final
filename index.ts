@@ -84,13 +84,13 @@ async function setUpDB(): Promise<void> {
 }
 
 async function insertInitialData(): Promise<void> {
+  // TODO: populate roles
+  // admin, member and trainer
+
   // create first user
   const result = await db.insert(users).values({first_name: 'test', last_name: 'User', email: 'john.doe@example.com', password: 'test', phone_number: '819-666-1234', address: 'jane street'}).returning({data: users.user_id }).execute();
   console.log("Result:", result[0].data);
   await db.insert(members).values({user_id: result[0].data, health_metric: 'health', fitness_goals: 'blah', fitness_achievements: 'none', join_date: '2023-09-01'})
-
-  // await db.insert(student).values({first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@example.com', enrollment_date: '2023-09-01'}).execute();
-  // await db.insert(student).values({first_name: 'Jim', last_name: 'Beam', email: 'jim.beam@example.com', enrollment_date: '2023-09-02'}).execute();
 }
 
 main().catch((err) => console.error(err));

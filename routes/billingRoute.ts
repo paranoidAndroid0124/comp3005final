@@ -11,7 +11,7 @@ export async function billingRoute(fastify, options) {
            const { memberId } = request.params;
 
            // Fetch the billing information from database
-           const billingInfo = await db.select().from(billingInformation).where(eq(billingInformation.member_id, memberId)).execute();
+           const billingInfo = await db.select().from(billingInformation).where(eq(billingInformation.user_id, memberId)).execute();
 
            // Check if billing info is found
            if (billingInfo.length ===0) {
