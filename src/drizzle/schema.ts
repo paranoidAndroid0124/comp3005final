@@ -91,6 +91,8 @@ export const exercise = pgTable("exercise", {
   duration: integer("duration"),
 });
 
+// keep this table for flexibility
+// allows to add admin specific attributes
 export const adminStaff = pgTable("adminStaff", {
   user_id: integer("user_id").references(() => users.user_id),
 });
