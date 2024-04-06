@@ -10,9 +10,11 @@ import { usersRoutes} from "./routes/usersRoutes";
 import { timeSlotRoutes} from "./routes/timeSlotRoutes";
 import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
-import {members, roles, timeSlots} from "./src/drizzle/schema";
+import {members, roles, timeSlots, trainer, userRoles} from "./src/drizzle/schema";
 import { users } from "./src/drizzle/schema";
 import {eq} from "drizzle-orm";
+import {trainerRoute} from "./routes/trainerRoute";
+import bcrypt from "bcrypt";
 
 const migrationConnection = postgres(process.env.DATABASE_URL!, { max: 1 });
 const queryConnection = postgres(process.env.DATABASE_URL!);
@@ -40,6 +42,7 @@ const main = async () => {
   await membersRoutes(fastify);
   await usersRoutes(fastify);
   await timeSlotRoutes(fastify);
+  await trainerRoute(fastify);
   // fastify.register(equipmentRoutes);
   // fastify.register(billingRoute);
 
@@ -74,6 +77,32 @@ async function insertInitialData(): Promise<void> {
       await db.insert(roles).values({role_name: role}).execute();
     }
   }
+
+  const hashedPassword = await bcrypt.hash('password', 10);
+  const trainersToAdd = [
+    {first_name: 'John', last_name: 'Doe', email: 'john@doe.com', password: hashedPassword, phone: '1234567890', address: 'doe street'},
+    {first_name: 'Jane', last_name: 'Smith', email: 'jane@smith.com', password: hashedPassword, phone: '1234567890', address: 'jane street'},
+    {first_name: 'Jim', last_name: 'Bean', email: 'jim@bean.com', password: hashedPassword, phone: '1234567890', address: 'bean street'},
+  ]
+  for (const user of trainersToAdd) {
+    // Check if user already exists based on their email
+    const userExists = await db.select().from(users).where(eq(users.email, user.email)).execute();
+    if (!userExists.length) {
+      const newUser = await db.insert(users).values({
+        email: user.email,
+        password: user.password,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        phone_number: user.phone,
+        address: user.address,
+      }).returning({insertedID: users.user_id}).execute();
+
+      await db.insert(userRoles).values({user_id: newUser[0].insertedID, role_id: 3 });
+      await db.insert(trainer).values({user_id: newUser[0].insertedID});
+    }
+  }
+
+  // TODO: add more base state as required
 }
 
 main().catch((err) => console.error(err));
