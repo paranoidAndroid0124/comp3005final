@@ -4,7 +4,6 @@ import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 import Fastify from "fastify";
 import cors from '@fastify/cors'
-import fCookie from '@fastify/cookie'
 
 import { membersRoutes } from "./routes/membersRoutes";
 import { usersRoutes} from "./routes/usersRoutes";
