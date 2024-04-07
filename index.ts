@@ -43,7 +43,7 @@ const main = async () => {
   await usersRoutes(fastify);
   await timeSlotRoutes(fastify);
   await trainerRoute(fastify);
-  // fastify.register(equipmentRoutes);
+  await equipmentRoutes(fastify);
   // fastify.register(billingRoute);
 
   console.log("Starting server");
