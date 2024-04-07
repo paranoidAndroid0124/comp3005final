@@ -10,7 +10,7 @@ import { usersRoutes} from "./routes/usersRoutes";
 import { timeSlotRoutes} from "./routes/timeSlotRoutes";
 import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
-import {members, roles, timeSlots, trainer, userRoles} from "./src/drizzle/schema";
+import {adminStaff, members, roles, timeSlots, trainer, userRoles} from "./src/drizzle/schema";
 import { users } from "./src/drizzle/schema";
 import {eq} from "drizzle-orm";
 import {trainerRoute} from "./routes/trainerRoute";
@@ -101,7 +101,26 @@ async function insertInitialData(): Promise<void> {
       await db.insert(trainer).values({user_id: newUser[0].insertedID});
     }
   }
+  // add admin
+  const adminToAdd = [
+    {first_name: 'admin', last_name: 'admin', email: 'admin@admin.com', password: hashedPassword, phone: '1234567890', address: 'admin street'},
+  ]
+  const admin = adminToAdd[0];
+  const adminExist = await db.select().from(users).where(eq(users.email, admin.email)).execute();
 
+  if (!adminExist.length) {
+    const newAdmin = await db.insert(users).values({
+      email: admin.email,
+      password: admin.password,
+      first_name: admin.first_name,
+      last_name: admin.last_name,
+      phone_number: admin.phone,
+      address: admin.address,
+    }).returning({insertedID: users.user_id}).execute();
+
+    await db.insert(userRoles).values({user_id: newAdmin[0].insertedID, role_id: 1});
+    await db.insert(adminStaff).values({user_id: newAdmin[0].insertedID});
+  }
   // TODO: add more base state as required
 }
 
