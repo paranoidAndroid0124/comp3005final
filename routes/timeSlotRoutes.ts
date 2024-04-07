@@ -69,8 +69,6 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
         try {
             const { trainer, startTime, endTime, capacity, location} = request.body;
 
-            console.log('trainer', trainer);
-
             // TODO: verify that the trainer is available at this time
             // TODO: verify that the user is allowed to add a timeslot
             // Logic to add a timeslot
