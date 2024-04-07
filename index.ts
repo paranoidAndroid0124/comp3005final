@@ -10,7 +10,7 @@ import { usersRoutes} from "./routes/usersRoutes";
 import { timeSlotRoutes} from "./routes/timeSlotRoutes";
 import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
-import {adminStaff, members, roles, timeSlots, trainer, userRoles} from "./src/drizzle/schema";
+import {adminStaff, equipments, members, roles, timeSlots, trainer, userRoles} from "./src/drizzle/schema";
 import { users } from "./src/drizzle/schema";
 import {eq} from "drizzle-orm";
 import {trainerRoute} from "./routes/trainerRoute";
@@ -120,6 +120,24 @@ async function insertInitialData(): Promise<void> {
 
     await db.insert(userRoles).values({user_id: newAdmin[0].insertedID, role_id: 1});
     await db.insert(adminStaff).values({user_id: newAdmin[0].insertedID});
+  }
+  // add equipment
+  const equipmentToAdd = [
+    {equipment_id: 1, equipment_name: 'smith machine', last_maintained: '2023-09-01', next_maintained: '2024-09-01'},
+    {equipment_id: 2, equipment_name: 'bench', last_maintained: '2023-09-01', next_maintained: '2030-09-01'},
+    {equipment_id: 3, equipment_name: 'leg press', last_maintained: '2023-09-01', next_maintained: '2025-09-01'},
+  ]
+  for (const equipment of equipmentToAdd) {
+    const equipmentExist = await db.select().from(equipments).where(eq(equipments.equipment_id, equipment.equipment_id)).execute();
+
+    if (!equipmentExist.length) {
+      await db.insert(equipments).values({
+        equipment_id: equipment.equipment_id,
+        equipment_name: equipment.equipment_name,
+        last_maintained: equipment.last_maintained,
+        next_maintained: equipment.next_maintained,
+      }).execute();
+    }
   }
   // TODO: add more base state as required
 }
