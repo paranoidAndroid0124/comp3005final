@@ -101,6 +101,38 @@ async function insertInitialData(): Promise<void> {
       await db.insert(trainer).values({user_id: newUser[0].insertedID});
     }
   }
+  // add members
+  const membersToAdd = [
+    {first_name: 'maxime', last_name: 'gagne', email: 'max@gagne.com', password: hashedPassword, phone: '1234567890', address: 'doe street'},
+    {first_name: 'vincent', last_name: 'gagnon', email: 'vincent@gagnon.com', password: hashedPassword, phone: '1234567890', address: '5 vince street'},
+    {first_name: 'Joe', last_name: 'rich', email: 'joe@rich.com', password: hashedPassword, phone: '1234567890', address: '2 rich street'},
+  ]
+  console.log("checking if members already exist")
+  for (const member of membersToAdd) {
+    // Check if user already exists based on their email
+    const memberExists = await db.select().from(users).where(eq(users.email, member.email)).execute();
+    console.log(memberExists);
+    if(!memberExists.length) {
+      console.log("adding new member");
+      const newUser = await db.insert(users).values({
+        email: member.email,
+        password: member.password,
+        first_name: member.first_name,
+        last_name: member.last_name,
+        phone_number: member.phone,
+        address: member.address,
+      }).returning({insertedID: users.user_id}).execute();
+
+      await db.insert(userRoles).values({user_id: newUser[0].insertedID, role_id: 2 });
+      await db.insert(members).values({
+        user_id: newUser[0].insertedID,
+        health_metric: '',
+        fitness_goals: '',
+        fitness_achievements: '',
+        join_date: new Date().toISOString().slice(0, 10)
+      }).execute();
+    }
+  }
   // add admin
   const adminToAdd = [
     {first_name: 'admin', last_name: 'admin', email: 'admin@admin.com', password: hashedPassword, phone: '1234567890', address: 'admin street'},
