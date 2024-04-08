@@ -1,7 +1,8 @@
 import { db } from '../db';
 import { eq } from "drizzle-orm";
 import { members } from '../src/drizzle/schema';
-import {FastifyInstance} from "fastify";
+import {FastifyInstance, FastifyRequest} from "fastify";
+import {authMiddleware, AuthRequest} from "./middleware/authMiddleware";
 
 interface profileBody {
     healthMetric: string,
@@ -10,8 +11,11 @@ interface profileBody {
 }
 
 export async function membersRoutes(fastify: FastifyInstance, options?) {
-    fastify.get('/member', async (request, reply) => {
+    //preValidation or onRequest ?
+    fastify.get('/member', {preValidation: [authMiddleware]}, async (request, reply) => {
         console.log("In members route");
+        const authRequest = request as AuthRequest;
+        console.log('userID', authRequest.userid);
         try {
             // Logic to return all members
             const membersList = await db.select().from(members).execute();
