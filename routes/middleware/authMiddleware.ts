@@ -3,11 +3,13 @@ import jwt from "jsonwebtoken";
 import {FastifyRequest} from "fastify";
 
 interface JwtPayload {
-    userid: number
+    userId: number,
+    roleId: number
 }
 
 export interface AuthRequest extends FastifyRequest{
-    userid: number
+    userId: number,
+    roleId: number
 }
 
 export const  authMiddleware: onRequestHookHandler = (request, reply, done) => {
@@ -23,8 +25,10 @@ export const  authMiddleware: onRequestHookHandler = (request, reply, done) => {
         // Bearer token
         const payload = jwt.verify( headerValue, process.env.JWT_SECRET) as JwtPayload;
         // Get the payload and store
-        (request as AuthRequest).userid = payload.userid;
-        console.log('token should be verified');
+        console.log('payload', payload);
+        console.log('payload.userid', payload.userId);
+        (request as AuthRequest).userId = payload.userId;
+        console.log('token should be verified for userid', (request as AuthRequest).userId);
         done();
     } catch (error) {
         return reply.status(401);

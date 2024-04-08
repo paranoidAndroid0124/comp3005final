@@ -32,7 +32,6 @@ export const billingInformation = pgTable("billingInformation", {
   billing_id: serial("billing_id").primaryKey(),
   user_id: integer("user_id").references(() => users.user_id),
   periodicity: text("periodicity").notNull(),
-  payment_info: text("paymentInfo").notNull(), // TODO: this will be a table
   card_type: text("cardType"),
   card_holder: text("cardHolder").notNull(),
   card_number: text("cardNumber").notNull(),

@@ -39,12 +39,13 @@ const main = async () => {
     return { hello: "world" };
   });
 
+  // register all routes
   await membersRoutes(fastify);
   await usersRoutes(fastify);
   await timeSlotRoutes(fastify);
   await trainerRoute(fastify);
   await equipmentRoutes(fastify);
-  // fastify.register(billingRoute);
+  await billingRoute(fastify);
 
   console.log("Starting server");
   // Run the server!

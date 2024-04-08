@@ -15,7 +15,7 @@ export async function membersRoutes(fastify: FastifyInstance, options?) {
     fastify.get('/member', {preValidation: [authMiddleware]}, async (request, reply) => {
         console.log("In members route");
         const authRequest = request as AuthRequest;
-        console.log('userID', authRequest.userid);
+        console.log('userID', authRequest.userId);
         try {
             // Logic to return all members
             const membersList = await db.select().from(members).execute();
