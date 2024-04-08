@@ -1,6 +1,6 @@
 # comp3005final
 Vincent Gagnon 101052796,
-Yufeng
+Yufeng Liu 101258905
 
 This application uses the drizzle orm to map the database content to typescript. Allowing for easy schema updating and querying.
 
