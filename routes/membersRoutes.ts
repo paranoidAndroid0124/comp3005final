@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { eq } from "drizzle-orm";
-import { members } from '../src/drizzle/schema';
+import {members, users} from '../src/drizzle/schema';
 import {FastifyInstance, FastifyRequest} from "fastify";
 import {authMiddleware, AuthRequest} from "./middleware/authMiddleware";
 
@@ -19,7 +19,25 @@ export async function membersRoutes(fastify: FastifyInstance, options?) {
         try {
             // Logic to return all members
             const membersList = await db.select().from(members).execute();
-            return reply.status(200).send(membersList);
+            const memberDetails = [];
+
+            for (const member of membersList) {
+                const userDetails = await db.select({
+                    first_name: users.first_name,
+                    last_name: users.last_name
+                }).from(users).where(eq(users.user_id, member.user_id)).execute();
+
+                if (userDetails.length > 0) {
+                    const user = userDetails[0];
+                    memberDetails.push({
+                        user_id: member.user_id,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                    })
+                }
+            }
+
+            return reply.status(200).send(memberDetails);
         } catch (error) {
             console.log("Error in member route");
             // handle database errors
