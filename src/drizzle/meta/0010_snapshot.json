@@ -1,5 +1,5 @@
 {
-  "id": "230cc026-ed0b-480d-a589-315471fa1f0b",
+  "id": "b20bf06b-1795-4a93-9c6b-29052872d5b6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -52,12 +52,6 @@
         },
         "periodicity": {
           "name": "periodicity",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "paymentInfo": {
-          "name": "paymentInfo",
           "type": "text",
           "primaryKey": false,
           "notNull": true

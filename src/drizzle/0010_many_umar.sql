@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS "billingInformation" (
 	"billing_id" serial PRIMARY KEY NOT NULL,
 	"user_id" integer,
 	"periodicity" text NOT NULL,
-	"paymentInfo" text NOT NULL,
 	"cardType" text,
 	"cardHolder" text NOT NULL,
 	"cardNumber" text NOT NULL,
