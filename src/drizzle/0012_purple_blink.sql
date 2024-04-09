@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS "paymentInfo" (
 	"payment_id" serial PRIMARY KEY NOT NULL,
 	"user_id" integer,
 	"payment_date" date,
-	"amount" integer
+	"amount" integer,
+	"slot_id" integer
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "roles" (
@@ -64,7 +65,8 @@ CREATE TABLE IF NOT EXISTS "timeSlots" (
 	"end_time" date NOT NULL,
 	"current_enrollment" integer NOT NULL,
 	"capacity" integer NOT NULL,
-	"location" text
+	"location" text,
+	"price" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "trainer" (
@@ -125,6 +127,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "paymentInfo" ADD CONSTRAINT "paymentInfo_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "paymentInfo" ADD CONSTRAINT "paymentInfo_slot_id_timeSlots_slot_id_fk" FOREIGN KEY ("slot_id") REFERENCES "timeSlots"("slot_id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

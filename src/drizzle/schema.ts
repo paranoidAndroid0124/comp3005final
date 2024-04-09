@@ -51,6 +51,7 @@ export const paymentInfo = pgTable("paymentInfo", {
   user_id: integer("user_id").references(() => users.user_id),
   payment_date: date(`payment_date`),
   amount: integer("amount"),
+  slots_id: integer("slot_id").references(() => timeSlots.slot_id),
 });
 
 export const membershipCard = pgTable("membershipCard", {
@@ -73,7 +74,8 @@ export const timeSlots = pgTable("timeSlots", {
   end_time: date("end_time").notNull(),
   current_enrollment: integer("current_enrollment").notNull(),
   capacity: integer("capacity").notNull(),
-  location: text("location")
+  location: text("location"),
+  price: integer("price").notNull(),
 });
 
 export const bookings = pgTable("bookings", {

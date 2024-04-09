@@ -1,5 +1,5 @@
 {
-  "id": "950eba55-6ac7-4721-b28c-282a2ee1aca3",
+  "id": "b254bb75-ee5c-4d1e-9623-299fdecccf72",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -328,6 +328,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "slot_id": {
+          "name": "slot_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -341,6 +347,19 @@
           ],
           "columnsTo": [
             "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "paymentInfo_slot_id_timeSlots_slot_id_fk": {
+          "name": "paymentInfo_slot_id_timeSlots_slot_id_fk",
+          "tableFrom": "paymentInfo",
+          "tableTo": "timeSlots",
+          "columnsFrom": [
+            "slot_id"
+          ],
+          "columnsTo": [
+            "slot_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -430,6 +449,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
