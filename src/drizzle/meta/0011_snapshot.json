@@ -1,5 +1,5 @@
 {
-  "id": "b20bf06b-1795-4a93-9c6b-29052872d5b6",
+  "id": "950eba55-6ac7-4721-b28c-282a2ee1aca3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -389,11 +389,17 @@
           "primaryKey": true,
           "notNull": true
         },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "trainer_Id": {
           "name": "trainer_Id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "start_time": {
           "name": "start_time",
@@ -411,13 +417,13 @@
           "name": "current_enrollment",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "capacity": {
           "name": "capacity",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "location": {
           "name": "location",

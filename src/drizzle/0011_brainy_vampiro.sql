@@ -58,11 +58,12 @@ CREATE TABLE IF NOT EXISTS "roles" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "timeSlots" (
 	"slot_id" serial PRIMARY KEY NOT NULL,
-	"trainer_Id" integer,
+	"title" text NOT NULL,
+	"trainer_Id" integer NOT NULL,
 	"start_time" date NOT NULL,
 	"end_time" date NOT NULL,
-	"current_enrollment" integer,
-	"capacity" integer,
+	"current_enrollment" integer NOT NULL,
+	"capacity" integer NOT NULL,
 	"location" text
 );
 --> statement-breakpoint
