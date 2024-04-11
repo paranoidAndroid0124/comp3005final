@@ -1,6 +1,6 @@
 import { db } from '../db';
 import {eq} from "drizzle-orm";
-import { billingInformation } from '../src/drizzle/schema';
+import {billingInformation, paymentInfo} from '../src/drizzle/schema';
 import {FastifyInstance} from "fastify";
 
 interface billingBody {
@@ -10,6 +10,12 @@ interface billingBody {
     cardHolder: string,
     cardNumber: string,
     expiry: string, // date in postgres
+}
+
+interface paymentBody {
+    userId: number,
+    amount: number,
+    slot_id: number,
 }
 
 export async function billingRoute(fastify: FastifyInstance, options?) {
@@ -52,20 +58,30 @@ export async function billingRoute(fastify: FastifyInstance, options?) {
                     expiry: expiry,
                 }).execute();
             } else {
+                // TODO: update info instead of returning an error
                 return reply.status(500).send({error: 'Billing info already exist'});
             }
+            return reply.status(201).send();
         } catch (error) {
             // handle database
             return reply.status(500).send( {error: 'Internal Server Error'});
         }
     });
 
-    fastify.post('/member/payment/add', async (request, reply) => {
+    fastify.post<{Body: paymentBody}>('/member/payment/add', async (request, reply) => {
         try {
             // Extract payment info from body
-            // TODO
+            const {userId,amount, slot_id} = request.body;
 
-            // TODO: db query
+            const payment = await db.insert(paymentInfo).values({
+                user_id: userId,
+                payment_date:  new Date().toISOString().slice(0, 10),
+                amount: amount,
+                slots_id: slot_id,
+            }).execute();
+        } catch (error) {
+            // handle database error
+            return reply.status(500).send({error: 'Internal Server Error'});
         }
-    })
+    });
 }
