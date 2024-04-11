@@ -1,5 +1,5 @@
 import { db } from '../db';
-import {eq} from "drizzle-orm"; // Update with the correct path to your db connection
+import {eq} from "drizzle-orm";
 import { billingInformation } from '../src/drizzle/schema';
 import {FastifyInstance} from "fastify";
 
@@ -59,4 +59,13 @@ export async function billingRoute(fastify: FastifyInstance, options?) {
             return reply.status(500).send( {error: 'Internal Server Error'});
         }
     });
+
+    fastify.post('/member/payment/add', async (request, reply) => {
+        try {
+            // Extract payment info from body
+            // TODO
+
+            // TODO: db query
+        }
+    })
 }
