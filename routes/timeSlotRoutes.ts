@@ -14,7 +14,7 @@ interface timeSlotBody {
     startTime: string,
     endTime: string,
     capacity: number,
-    location: string,
+    room: number,
     price: number,
 }
 
@@ -69,7 +69,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
     // this would likely only be done by admin or trainer
     fastify.post<{Body: timeSlotBody}>('/timeslots/add', async (request, reply) => {
         try {
-            const { title, trainer, startTime, endTime, capacity, location, price} = request.body;
+            const { title, trainer, startTime, endTime, capacity, room, price} = request.body;
 
             // TODO: verify that the trainer is available at this time
             // TODO: verify that the user is allowed to add a timeslot
@@ -82,7 +82,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
                 end_time: endTime,
                 current_enrollment: 0,
                 capacity: capacity,
-                location: location,
+                room: room,
                 price: price,
             }).returning( {slotID: timeSlots.slot_id}).execute();
             return reply.status(201).send(timeslot[0].slotID);

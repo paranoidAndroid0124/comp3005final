@@ -1,5 +1,5 @@
 {
-  "id": "b254bb75-ee5c-4d1e-9623-299fdecccf72",
+  "id": "7367a5a6-7351-4af6-9685-f8b539b9ed4b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -187,11 +187,17 @@
       "name": "exercise",
       "schema": "",
       "columns": {
+        "exercise_id": {
+          "name": "exercise_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
         "exercise": {
           "name": "exercise",
           "type": "text",
-          "primaryKey": true,
-          "notNull": true
+          "primaryKey": false,
+          "notNull": false
         },
         "reps": {
           "name": "reps",
@@ -398,6 +404,70 @@
         }
       }
     },
+    "rooms": {
+      "name": "rooms",
+      "schema": "",
+      "columns": {
+        "room_id": {
+          "name": "room_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "room_name": {
+          "name": "room_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "room_capacity": {
+          "name": "room_capacity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "routine": {
+      "name": "routine",
+      "schema": "",
+      "columns": {
+        "routine_id": {
+          "name": "routine_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "exercise_id": {
+          "name": "exercise_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "routine_exercise_id_exercise_exercise_id_fk": {
+          "name": "routine_exercise_id_exercise_exercise_id_fk",
+          "tableFrom": "routine",
+          "tableTo": "exercise",
+          "columnsFrom": [
+            "exercise_id"
+          ],
+          "columnsTo": [
+            "exercise_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "timeSlots": {
       "name": "timeSlots",
       "schema": "",
@@ -444,9 +514,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "location": {
-          "name": "location",
-          "type": "text",
+        "room": {
+          "name": "room",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -458,7 +528,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "timeSlots_room_rooms_room_id_fk": {
+          "name": "timeSlots_room_rooms_room_id_fk",
+          "tableFrom": "timeSlots",
+          "tableTo": "rooms",
+          "columnsFrom": [
+            "room"
+          ],
+          "columnsTo": [
+            "room_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -533,6 +617,55 @@
           ],
           "columnsTo": [
             "role_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "userRoutine": {
+      "name": "userRoutine",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "routine_id": {
+          "name": "routine_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "userRoutine_user_id_users_user_id_fk": {
+          "name": "userRoutine_user_id_users_user_id_fk",
+          "tableFrom": "userRoutine",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "userRoutine_routine_id_routine_routine_id_fk": {
+          "name": "userRoutine_routine_id_routine_routine_id_fk",
+          "tableFrom": "userRoutine",
+          "tableTo": "routine",
+          "columnsFrom": [
+            "routine_id"
+          ],
+          "columnsTo": [
+            "routine_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"

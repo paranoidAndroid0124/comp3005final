@@ -10,7 +10,7 @@ import { usersRoutes} from "./routes/usersRoutes";
 import { timeSlotRoutes} from "./routes/timeSlotRoutes";
 import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
-import {adminStaff, equipments, members, roles, timeSlots, trainer, userRoles} from "./src/drizzle/schema";
+import {adminStaff, equipments, members, roles, rooms, timeSlots, trainer, userRoles} from "./src/drizzle/schema";
 import { users } from "./src/drizzle/schema";
 import {eq} from "drizzle-orm";
 import {trainerRoute} from "./routes/trainerRoute";
@@ -169,6 +169,22 @@ async function insertInitialData(): Promise<void> {
         equipment_name: equipment.equipment_name,
         last_maintained: equipment.last_maintained,
         next_maintained: equipment.next_maintained,
+      }).execute();
+    }
+  }
+  // add rooms
+  const roomToAdd = [
+    {room_name: "main room", room_capacity: 100},
+    {room_name: "cardio room", room_capacity: 100},
+    {room_name: "weight room", room_capacity: 100},
+  ]
+  for (const room of roomToAdd) {
+    const roomExist = await db.select().from(rooms).where(eq(rooms.room_name, room.room_name)).execute();
+
+    if (!roomExist.length) {
+      await db.insert(rooms).values({
+        room_name: room.room_name,
+        room_capacity: room.room_capacity
       }).execute();
     }
   }
