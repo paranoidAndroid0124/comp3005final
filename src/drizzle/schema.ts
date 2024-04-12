@@ -51,7 +51,7 @@ export const paymentInfo = pgTable("paymentInfo", {
   user_id: integer("user_id").references(() => users.user_id),
   payment_date: date(`payment_date`),
   amount: integer("amount"),
-  slots_id: integer("slot_id").references(() => timeSlots.slot_id),
+  slot_id: integer("slot_id").references(() => timeSlots.slot_id),
 });
 
 export const membershipCard = pgTable("membershipCard", {
@@ -74,7 +74,7 @@ export const timeSlots = pgTable("timeSlots", {
   end_time: date("end_time").notNull(),
   current_enrollment: integer("current_enrollment").notNull(),
   capacity: integer("capacity").notNull(),
-  location: text("location"),
+  room: integer("room").references(() => rooms.room_id),
   price: integer("price").notNull(),
 });
 
@@ -83,14 +83,31 @@ export const bookings = pgTable("bookings", {
   slot_id: integer("slot_id").references(() => timeSlots.slot_id)
 });
 
+export const rooms = pgTable("rooms", {
+  room_id: serial("room_id").primaryKey(),
+  room_name: text("room_name").notNull(),
+  room_capacity: integer("room_capacity").notNull(),
+})
+
 export const trainer = pgTable("trainer", {
   user_id: integer("user_id").references(() => users.user_id),
 });
 
 export const exercise = pgTable("exercise", {
-  exercise_type: text("exercise").primaryKey(),
+  exercise_id: serial("exercise_id").primaryKey(),
+  exercise_type: text("exercise"),
   reps: integer("reps"),
   duration: integer("duration"),
+});
+
+export const routine = pgTable("routine", {
+  routine_id: serial("routine_id").primaryKey(),
+  exercise_id: integer("exercise_id").references(() => exercise.exercise_id),
+});
+
+export const userRoutine = pgTable("userRoutine", {
+  user_id: integer("user_id").references(() => users.user_id),
+  routine_id: integer("routine_id").references(() => routine.routine_id),
 });
 
 // keep this table for flexibility
