@@ -70,15 +70,21 @@ export async function billingRoute(fastify: FastifyInstance, options?) {
 
     fastify.post<{Body: paymentBody}>('/member/payment/add', async (request, reply) => {
         try {
+            console.log("In payment add");
             // Extract payment info from body
             const {userId,amount, slot_id} = request.body;
+            console.log("Parsed body");
 
-            const payment = await db.insert(paymentInfo).values({
+            await db.insert(paymentInfo).values({
                 user_id: userId,
-                payment_date:  new Date().toISOString().slice(0, 10),
+                payment_date: new Date().toISOString().slice(0, 10),
                 amount: amount,
-                slots_id: slot_id,
+                slot_id: slot_id,
             }).execute();
+
+            console.log("payment insert worked?");
+
+            return reply.status(201).send();
         } catch (error) {
             // handle database error
             return reply.status(500).send({error: 'Internal Server Error'});

@@ -51,7 +51,7 @@ export const paymentInfo = pgTable("paymentInfo", {
   user_id: integer("user_id").references(() => users.user_id),
   payment_date: date(`payment_date`),
   amount: integer("amount"),
-  slots_id: integer("slot_id").references(() => timeSlots.slot_id),
+  slot_id: integer("slot_id").references(() => timeSlots.slot_id),
 });
 
 export const membershipCard = pgTable("membershipCard", {

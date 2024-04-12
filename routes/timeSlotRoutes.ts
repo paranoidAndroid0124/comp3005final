@@ -73,6 +73,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
 
             // TODO: verify that the trainer is available at this time
             // TODO: verify that the user is allowed to add a timeslot
+            // TODO: block duplicates
             // Logic to add a timeslot
             const timeslot = await db.insert(timeSlots).values({
                 title: title,
