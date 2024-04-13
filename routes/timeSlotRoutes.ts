@@ -1,7 +1,7 @@
 import {FastifyInstance} from "fastify";
 import {bookings, timeSlots} from "../src/drizzle/schema";
 import {db} from "../db";
-import {eq} from "drizzle-orm";
+import {eq, sql} from "drizzle-orm";
 import {timestamp} from "drizzle-orm/pg-core";
 
 interface timeSlotRegisterBody {
@@ -60,6 +60,21 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
                 user_id: userID,
                 slot_id: timeSlotsID
             }).execute();
+
+            console.log("Added registration to bookings")
+
+            // Uptime current enrollment
+            // await db.update(timeSlots)
+            //     .set({
+            //         current_enrollment: sql`${timeSlots.current_enrollment} + 1`
+            //     })
+            //     .where(eq(timeSlots.slot_id, timeSlotsID ))
+            //     .execute();
+
+            // TODO: try splitting the query
+            //await db.select().from(timeSlots).where(eq(timeSlots.slot_id, timeSlotsID)).returning( {insertedID: users.user_id}).execute();
+
+            console.log("Incremented current enrollment");
 
             return reply.status(201).send();
         } catch (error) {

@@ -1,5 +1,5 @@
 {
-  "id": "60f362ba-8234-4988-ab10-b173c7978239",
+  "id": "f6fd02dd-6468-4162-bd10-aaa508503094",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -183,8 +183,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "exercise": {
-      "name": "exercise",
+    "exercises": {
+      "name": "exercises",
       "schema": "",
       "columns": {
         "exercise_id": {
@@ -193,8 +193,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "exercise": {
-          "name": "exercise",
+        "exercise_name": {
+          "name": "exercise_name",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -207,7 +207,7 @@
         },
         "duration": {
           "name": "duration",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
@@ -415,10 +415,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "routine_exercise_id_exercise_exercise_id_fk": {
-          "name": "routine_exercise_id_exercise_exercise_id_fk",
+        "routine_exercise_id_exercises_exercise_id_fk": {
+          "name": "routine_exercise_id_exercises_exercise_id_fk",
           "tableFrom": "routine",
-          "tableTo": "exercise",
+          "tableTo": "exercises",
           "columnsFrom": [
             "exercise_id"
           ],

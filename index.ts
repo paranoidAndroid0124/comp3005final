@@ -10,7 +10,17 @@ import { usersRoutes} from "./routes/usersRoutes";
 import { timeSlotRoutes} from "./routes/timeSlotRoutes";
 import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
-import {adminStaff, equipments, members, roles, rooms, timeSlots, trainer, userRoles} from "./src/drizzle/schema";
+import {
+  adminStaff,
+  equipments,
+  exercises,
+  members,
+  roles,
+  rooms,
+  timeSlots,
+  trainer,
+  userRoles
+} from "./src/drizzle/schema";
 import { users } from "./src/drizzle/schema";
 import {eq} from "drizzle-orm";
 import {trainerRoute} from "./routes/trainerRoute";
@@ -185,6 +195,40 @@ async function insertInitialData(): Promise<void> {
       await db.insert(rooms).values({
         room_name: room.room_name,
         room_capacity: room.room_capacity
+      }).execute();
+    }
+  }
+  // Add exercises
+  const exercisesToAdd = [
+    { "exercise_id": 1, "exercise_name": "Push-ups", "reps": 10, "duration": "30s" },
+    { "exercise_id": 2, "exercise_name": "Sit-ups", "reps": 15, "duration": "45s" },
+    { "exercise_id": 3, "exercise_name": "Jumping Jacks", "reps": 20, "duration": "60s" },
+    { "exercise_id": 4, "exercise_name": "Burpees", "reps": 10, "duration": "40s" },
+    { "exercise_id": 5, "exercise_name": "Squats", "reps": 15, "duration": "50s" },
+    { "exercise_id": 6, "exercise_name": "Lunges", "reps": 12, "duration": "40s" },
+    { "exercise_id": 7, "exercise_name": "Plank", "reps": 1, "duration": "60s" },
+    { "exercise_id": 8, "exercise_name": "Mountain Climbers", "reps": 20, "duration": "60s" },
+    { "exercise_id": 9, "exercise_name": "High Knees", "reps": 20, "duration": "60s" },
+    { "exercise_id": 10, "exercise_name": "Leg Raises", "reps": 15, "duration": "45s" },
+    { "exercise_id": 11, "exercise_name": "Russian Twists", "reps": 20, "duration": "60s" },
+    { "exercise_id": 12, "exercise_name": "Bicycle Crunches", "reps": 20, "duration": "60s" },
+    { "exercise_id": 13, "exercise_name": "Side Plank Left", "reps": 1, "duration": "30s" },
+    { "exercise_id": 14, "exercise_name": "Side Plank Right", "reps": 1, "duration": "30s" },
+    { "exercise_id": 15, "exercise_name": "Tuck Jumps", "reps": 10, "duration": "30s" },
+    { "exercise_id": 16, "exercise_name": "Box Jumps", "reps": 10, "duration": "40s" },
+    { "exercise_id": 17, "exercise_name": "Wall Sit", "reps": 1, "duration": "45s" },
+    { "exercise_id": 18, "exercise_name": "Calf Raises", "reps": 20, "duration": "60s" },
+    { "exercise_id": 19, "exercise_name": "Flutter Kicks", "reps": 20, "duration": "45s" },
+    { "exercise_id": 20, "exercise_name": "Arm Circles", "reps": 15, "duration": "30s" }
+  ]
+  for (const exerciseItem of exercisesToAdd) {
+    const exerciseExist = await db.select().from(exercises).where(eq(exercises.exercise_name, exerciseItem.exercise_name));
+
+    if (!exerciseExist.length) {
+      await db.insert(exercises).values({
+        exercise_name: exerciseItem.exercise_name,
+        reps: exerciseItem.reps,
+        duration: exerciseItem.duration,
       }).execute();
     }
   }

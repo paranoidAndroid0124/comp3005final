@@ -88,16 +88,16 @@ export const trainer = pgTable("trainer", {
   user_id: integer("user_id").references(() => users.user_id),
 });
 
-export const exercise = pgTable("exercise", {
+export const exercises = pgTable("exercises", {
   exercise_id: serial("exercise_id").primaryKey(),
-  exercise_type: text("exercise"),
+  exercise_name: text("exercise_name"),
   reps: integer("reps"),
-  duration: integer("duration"),
+  duration: text("duration"),
 });
 
 export const routine = pgTable("routine", {
   routine_id: serial("routine_id").primaryKey(),
-  exercise_id: integer("exercise_id").references(() => exercise.exercise_id),
+  exercise_id: integer("exercise_id").references(() => exercises.exercise_id),
 });
 
 export const userRoutine = pgTable("userRoutine", {
