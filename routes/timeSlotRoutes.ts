@@ -2,6 +2,7 @@ import {FastifyInstance} from "fastify";
 import {bookings, timeSlots} from "../src/drizzle/schema";
 import {db} from "../db";
 import {eq} from "drizzle-orm";
+import { start } from "repl";
 
 interface timeSlotRegisterBody {
     userID: number,
@@ -71,6 +72,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
         try {
             const { title, trainer, startTime, endTime, capacity, room, price} = request.body;
 
+            console.log("startTime, endTime: ", startTime, endTime);
             // TODO: verify that the trainer is available at this time
             // TODO: verify that the user is allowed to add a timeslot
             // TODO: block duplicates
