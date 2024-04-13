@@ -54,16 +54,11 @@ export const paymentInfo = pgTable("paymentInfo", {
   slot_id: integer("slot_id").references(() => timeSlots.slot_id),
 });
 
-export const membershipCard = pgTable("membershipCard", {
-  user_id: integer("user_id").references(() => users.user_id),
-  nfc: text("nfc"),
-});
-
 export const equipments = pgTable("equipment", {
   equipment_id: serial("equipment_id").primaryKey(),
   equipment_name: text("equipment_name"),
   last_maintained: date("last_maintained").notNull(),
-  next_maintained: date("next_maintained").notNull(),
+  next_maintained: date("next_maintained").notNull(), // typo but leave as is for now
 });
 
 export const timeSlots = pgTable("timeSlots", {
