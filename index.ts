@@ -10,6 +10,7 @@ import { usersRoutes} from "./routes/usersRoutes";
 import { timeSlotRoutes} from "./routes/timeSlotRoutes";
 import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
+import { roomsRoute } from "./routes/roomsRoute";
 import {
   adminStaff,
   equipments,
@@ -58,6 +59,7 @@ const main = async () => {
   await equipmentRoutes(fastify);
   await billingRoute(fastify);
   await exerciseRoutes(fastify);
+  await roomsRoute(fastify);
 
   console.log("Starting server");
   // Run the server!
