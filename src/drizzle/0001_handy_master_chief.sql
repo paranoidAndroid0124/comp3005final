@@ -39,11 +39,6 @@ CREATE TABLE IF NOT EXISTS "member" (
 	"join_date" date
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "membershipCard" (
-	"user_id" integer,
-	"nfc" text
-);
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "paymentInfo" (
 	"payment_id" serial PRIMARY KEY NOT NULL,
 	"user_id" integer,
@@ -132,12 +127,6 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "member" ADD CONSTRAINT "member_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "membershipCard" ADD CONSTRAINT "membershipCard_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
