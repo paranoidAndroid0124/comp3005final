@@ -5,8 +5,8 @@ import {eq, sql} from "drizzle-orm";
 import {timestamp} from "drizzle-orm/pg-core";
 
 interface timeSlotRegisterBody {
-    userID: number,
-    timeSlotsID: number,
+    user_id: number,
+    slot_id: number,
 }
 
 interface timeSlotBody {
@@ -52,13 +52,16 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
 
     fastify.post<{Body: timeSlotRegisterBody}>('/timeslot/register', async (request, reply) => {
         try {
+            console.log("In register timeslot");
             // would it better in body or as params ?
-            const { userID, timeSlotsID } = request.body;
+            const { user_id, slot_id } = request.body;
+
+            console.log("user and slot id", user_id, slot_id);
 
             //TODO: check if userID and timeSlotID is valid
             await db.insert(bookings).values({
-                user_id: userID,
-                slot_id: timeSlotsID
+                user_id: user_id,
+                slot_id: slot_id
             }).execute();
 
             console.log("Added registration to bookings")
@@ -72,12 +75,13 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
             //     .execute();
 
             // TODO: try splitting the query
-            //await db.select().from(timeSlots).where(eq(timeSlots.slot_id, timeSlotsID)).returning( {insertedID: users.user_id}).execute();
+            //const slot = await db.select(timeSlots.slot_id).from(timeSlots).where(eq(timeSlots.slot_id, timeSlotsID)).execute();
 
             console.log("Incremented current enrollment");
 
             return reply.status(201).send();
         } catch (error) {
+            console.log("error", error)
             return reply.status(500).send({error: 'Internal Server Error'});
         }
     });

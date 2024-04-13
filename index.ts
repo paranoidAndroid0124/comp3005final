@@ -25,6 +25,7 @@ import { users } from "./src/drizzle/schema";
 import {eq} from "drizzle-orm";
 import {trainerRoute} from "./routes/trainerRoute";
 import bcrypt from "bcrypt";
+import {exerciseRoutes} from "./routes/exerciseRoutes";
 
 const migrationConnection = postgres(process.env.DATABASE_URL!, { max: 1 });
 const queryConnection = postgres(process.env.DATABASE_URL!);
@@ -56,6 +57,7 @@ const main = async () => {
   await trainerRoute(fastify);
   await equipmentRoutes(fastify);
   await billingRoute(fastify);
+  await exerciseRoutes(fastify);
 
   console.log("Starting server");
   // Run the server!
@@ -229,6 +231,125 @@ async function insertInitialData(): Promise<void> {
         exercise_name: exerciseItem.exercise_name,
         reps: exerciseItem.reps,
         duration: exerciseItem.duration,
+      }).execute();
+    }
+  }
+  const timeSlotsToAdd = [
+    {
+      "trainer_id" : 1,
+      "start_time": "2024-04-07T07:00:00",
+      "end_time": "2024-04-07T09:00:00",
+      "title": "Morning Session",
+      "location": "Room 101",
+      "capacity": 50,
+      "current_enrollment": 0,
+      "price": 0
+    },
+    {
+      "trainer_id" : 1,
+      "start_time": "2024-04-07T11:00:00",
+      "end_time": "2024-04-07T13:00:00",
+      "title": "Midday Session",
+      "location": "Room 102",
+      "capacity": 60,
+      "current_enrollment": 0,
+      "price": 10
+    },
+    {
+      "trainer_id" : 1,
+      "start_time": "2024-04-07T15:00:00",
+      "end_time": "2024-04-07T17:00:00",
+      "title": "Afternoon Session",
+      "location": "Room 103",
+      "capacity": 70,
+      "current_enrollment": 0,
+      "price": 15
+    },
+    {
+      "trainer_id" : 1,
+      "start_time": "2024-04-07T19:00:00",
+      "end_time": "2024-04-07T21:00:00",
+      "title": "Evening Session",
+      "location": "Room 104",
+      "capacity": 80,
+      "current_enrollment": 0,
+      "price": 20
+    },
+    {
+      "trainer_id" : 2,
+      "start_time": "2024-04-08T07:00:00",
+      "end_time": "2024-04-08T09:00:00",
+      "title": "Morning Session",
+      "location": "Room 105",
+      "capacity": 50,
+      "current_enrollment": 0,
+      "price": 0
+    },
+    {
+      "trainer_id" : 2,
+      "start_time": "2024-04-08T11:00:00",
+      "end_time": "2024-04-08T13:00:00",
+      "title": "Midday Session",
+      "location": "Room 106",
+      "capacity": 60,
+      "current_enrollment": 0,
+      "price": 10
+    },
+    {
+      "trainer_id" : 2,
+      "start_time": "2024-04-08T15:00:00",
+      "end_time": "2024-04-08T17:00:00",
+      "title": "Afternoon Session",
+      "location": "Room 107",
+      "capacity": 70,
+      "current_enrollment": 0,
+      "price": 15
+    },
+    {
+      "trainer_id" : 3,
+      "start_time": "2024-04-08T19:00:00",
+      "end_time": "2024-04-08T21:00:00",
+      "title": "Evening Session",
+      "location": "Room 108",
+      "capacity": 80,
+      "current_enrollment": 0,
+      "price": 20
+    },
+    {
+      "trainer_id" : 3,
+      "start_time": "2024-04-09T07:00:00",
+      "end_time": "2024-04-09T09:00:00",
+      "title": "Morning Session",
+      "location": "Room 109",
+      "capacity": "50",
+      "current_enrollment": 0,
+      "price": 0
+    },
+    {
+      "trainer_id" : 3,
+      "start_time": "2024-04-09T11:00:00",
+      "end_time": "2024-04-09T13:00:00",
+      "title": "Midday Session",
+      "location": "Room 110",
+      "capacity": 60,
+      "current_enrollment": 0,
+      "price": 10
+    }
+  ]
+  for (const timeslotItem of timeSlotsToAdd) {
+    const timeSlotExist = await db.select().from(timeSlots).where(eq(timeSlots.title, timeslotItem.title)).execute();
+
+    if (!timeSlotExist.length) {
+      // @ts-ignore
+      await db.insert(timeSlots).values({
+        title: timeslotItem.title,
+        trainer_id: timeslotItem.trainer_id,
+        start_time: timeslotItem.start_time,
+        end_time: timeslotItem.end_time,
+        current_enrollment: timeslotItem.current_enrollment,
+        capacity: timeslotItem.capacity,
+        room: 1,
+        price: timeslotItem.price,
       }).execute();
     }
   }
