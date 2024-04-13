@@ -16,13 +16,13 @@ import {
   exercises,
   members,
   roles,
-  rooms,
+  rooms, routine, routineExercise,
   timeSlots,
   trainer,
   userRoles
 } from "./src/drizzle/schema";
 import { users } from "./src/drizzle/schema";
-import {eq} from "drizzle-orm";
+import {and, eq} from "drizzle-orm";
 import {trainerRoute} from "./routes/trainerRoute";
 import bcrypt from "bcrypt";
 import {exerciseRoutes} from "./routes/exerciseRoutes";
@@ -234,6 +234,52 @@ async function insertInitialData(): Promise<void> {
       }).execute();
     }
   }
+  // Add routine
+  const routineToAdd = [
+    { "routine_name": "My first routine"},
+    { "routine_name": "Advance routine"},
+    { "routine_name": "Best routine"},
+  ]
+  for (const routineItem of routineToAdd) {
+    try {
+      // Check if a routine with the same routine_id AND exercise_id already exists
+      const existingRoutine = await db.select().from(routine)
+          .where(and(
+              eq(routine.routine_name, routineItem.routine_name),
+          )).execute();
+
+      // Insert the new routine if it does not already exist
+      if (!existingRoutine.length) {
+        await db.insert(routine)
+            .values({
+              routine_name: routineItem.routine_name
+            }).execute();
+      }
+    } catch (error) {
+      console.error("Error inserting data: ", error.message);
+      // Handle errors appropriately in your application context
+    }
+  }
+  // add some exercise to routine
+  const exerciseToMap = [
+    {"routine_id" : 1, "exercise_id": 1},
+    {"routine_id" : 1, "exercise_id": 2},
+    {"routine_id" : 1, "exercise_id": 3},
+    {"routine_id" : 1, "exercise_id": 4},
+    {"routine_id" : 2, "exercise_id": 1}
+  ]
+  for (const exerciseMap of exerciseToMap) {
+    const exerciseMapExist = await db.select().from(routineExercise).where(
+        and(eq(routineExercise.routine_id, exerciseMap.routine_id), eq(routineExercise.exercise_id, exerciseMap.exercise_id))).execute();
+
+    if (!exerciseMapExist.length) {
+      await db.insert(routineExercise).values({
+        routine_id: exerciseMap.routine_id,
+        exercise_id: exerciseMap.exercise_id,
+      }).execute();
+    }
+  }
+  // Add timeSlots
   const timeSlotsToAdd = [
     {
       "trainer_id" : 1,
@@ -279,7 +325,7 @@ async function insertInitialData(): Promise<void> {
       "trainer_id" : 2,
       "start_time": "2024-04-08T07:00:00",
       "end_time": "2024-04-08T09:00:00",
-      "title": "Morning Session",
+      "title": "Morning Session 2",
       "location": "Room 105",
       "capacity": 50,
       "current_enrollment": 0,
@@ -289,7 +335,7 @@ async function insertInitialData(): Promise<void> {
       "trainer_id" : 2,
       "start_time": "2024-04-08T11:00:00",
       "end_time": "2024-04-08T13:00:00",
-      "title": "Midday Session",
+      "title": "Midday Session 2",
       "location": "Room 106",
       "capacity": 60,
       "current_enrollment": 0,
@@ -299,7 +345,7 @@ async function insertInitialData(): Promise<void> {
       "trainer_id" : 2,
       "start_time": "2024-04-08T15:00:00",
       "end_time": "2024-04-08T17:00:00",
-      "title": "Afternoon Session",
+      "title": "Afternoon Session 2",
       "location": "Room 107",
       "capacity": 70,
       "current_enrollment": 0,
@@ -309,7 +355,7 @@ async function insertInitialData(): Promise<void> {
       "trainer_id" : 3,
       "start_time": "2024-04-08T19:00:00",
       "end_time": "2024-04-08T21:00:00",
-      "title": "Evening Session",
+      "title": "Evening Session 2",
       "location": "Room 108",
       "capacity": 80,
       "current_enrollment": 0,
@@ -319,7 +365,7 @@ async function insertInitialData(): Promise<void> {
       "trainer_id" : 3,
       "start_time": "2024-04-09T07:00:00",
       "end_time": "2024-04-09T09:00:00",
-      "title": "Morning Session",
+      "title": "Morning Session 3",
       "location": "Room 109",
       "capacity": "50",
       "current_enrollment": 0,
@@ -329,7 +375,7 @@ async function insertInitialData(): Promise<void> {
       "trainer_id" : 3,
       "start_time": "2024-04-09T11:00:00",
       "end_time": "2024-04-09T13:00:00",
-      "title": "Midday Session",
+      "title": "Midday Session 3",
       "location": "Room 110",
       "capacity": 60,
       "current_enrollment": 0,

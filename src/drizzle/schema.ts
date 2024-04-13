@@ -97,7 +97,13 @@ export const exercises = pgTable("exercises", {
 
 export const routine = pgTable("routine", {
   routine_id: serial("routine_id").primaryKey(),
-  exercise_id: integer("exercise_id").references(() => exercises.exercise_id),
+  routine_name: text("routine_name"),
+});
+
+// this table links routines to exercises, allowing a many-to-relationship
+export const routineExercise = pgTable("routineExercise", {
+  routine_id: integer("routine_id").references(() => routine.routine_id),
+  exercise_id: integer("exercise_id").references(()=> exercises.exercise_id),
 });
 
 export const userRoutine = pgTable("userRoutine", {

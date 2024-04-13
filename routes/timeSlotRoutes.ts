@@ -74,8 +74,11 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
             //     .where(eq(timeSlots.slot_id, timeSlotsID ))
             //     .execute();
 
-            // TODO: try splitting the query
-            //const slot = await db.select(timeSlots.slot_id).from(timeSlots).where(eq(timeSlots.slot_id, timeSlotsID)).execute();
+            // TODO: test to make sure this works
+            const slot = await db.select().from(timeSlots).where(eq(timeSlots.slot_id, slot_id)).execute();
+            const slotNum = slot[0].current_enrollment + 1;
+            // update enrollment
+            await db.update(timeSlots).set({ current_enrollment: slotNum}).where(eq(timeSlots.slot_id, slot_id)).execute();
 
             console.log("Incremented current enrollment");
 
