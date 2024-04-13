@@ -2,7 +2,7 @@ import {FastifyInstance} from "fastify";
 import {bookings, timeSlots} from "../src/drizzle/schema";
 import {db} from "../db";
 import {eq} from "drizzle-orm";
-import { start } from "repl";
+import {timestamp} from "drizzle-orm/pg-core";
 
 interface timeSlotRegisterBody {
     userID: number,
@@ -11,7 +11,7 @@ interface timeSlotRegisterBody {
 
 interface timeSlotBody {
     title: string
-    trainer: number,
+    trainer_id: number,
     startTime: string,
     endTime: string,
     capacity: number,
@@ -70,16 +70,17 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
     // this would likely only be done by admin or trainer
     fastify.post<{Body: timeSlotBody}>('/timeslots/add', async (request, reply) => {
         try {
-            const { title, trainer, startTime, endTime, capacity, room, price} = request.body;
+            const { title, trainer_id, startTime, endTime, capacity, room, price} = request.body;
 
             console.log("startTime, endTime: ", startTime, endTime);
+            console.log("Typeof", typeof(startTime), typeof(endTime));
             // TODO: verify that the trainer is available at this time
             // TODO: verify that the user is allowed to add a timeslot
             // TODO: block duplicates
             // Logic to add a timeslot
             const timeslot = await db.insert(timeSlots).values({
                 title: title,
-                trainer_id: trainer,
+                trainer_id: trainer_id,
                 start_time: startTime,
                 end_time: endTime,
                 current_enrollment: 0,
@@ -89,6 +90,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
             }).returning( {slotID: timeSlots.slot_id}).execute();
             return reply.status(201).send(timeslot[0].slotID);
         } catch (error) {
+            console.log("Error", error);
             return reply.status(500).send({error: 'Internal Server Error'});
         }
     });

@@ -1,5 +1,5 @@
 {
-  "id": "26494d92-4b1c-40dc-a309-e95998237c0b",
+  "id": "60f362ba-8234-4988-ab10-b173c7978239",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -448,21 +448,21 @@
           "primaryKey": false,
           "notNull": true
         },
-        "trainer_Id": {
-          "name": "trainer_Id",
+        "trainer_id": {
+          "name": "trainer_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "start_time": {
           "name": "start_time",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
         "end_time": {
           "name": "end_time",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },

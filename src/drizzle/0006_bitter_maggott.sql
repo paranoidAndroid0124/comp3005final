@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS "routine" (
 CREATE TABLE IF NOT EXISTS "timeSlots" (
 	"slot_id" serial PRIMARY KEY NOT NULL,
 	"title" text NOT NULL,
-	"trainer_Id" integer NOT NULL,
-	"start_time" date NOT NULL,
-	"end_time" date NOT NULL,
+	"trainer_id" integer NOT NULL,
+	"start_time" timestamp NOT NULL,
+	"end_time" timestamp NOT NULL,
 	"current_enrollment" integer NOT NULL,
 	"capacity" integer NOT NULL,
 	"room" integer,

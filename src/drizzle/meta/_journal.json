@@ -16,6 +16,41 @@
       "when": 1712971572164,
       "tag": "0001_handy_master_chief",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1713018364655,
+      "tag": "0002_nebulous_madame_hydra",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1713019606189,
+      "tag": "0003_curvy_husk",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1713019659738,
+      "tag": "0004_green_zarek",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1713020117013,
+      "tag": "0005_lumpy_harrier",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1713021201739,
+      "tag": "0006_bitter_maggott",
+      "breakpoints": true
     }
   ]
 }

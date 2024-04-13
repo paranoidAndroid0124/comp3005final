@@ -4,7 +4,7 @@ import {
   pgTable,
   serial,
   text,
-  pgSchema,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -64,9 +64,9 @@ export const equipments = pgTable("equipment", {
 export const timeSlots = pgTable("timeSlots", {
   slot_id: serial("slot_id").primaryKey(),
   title: text("title").notNull(),
-  trainer_id: integer("trainer_Id").notNull(),
-  start_time: date("start_time").notNull(),
-  end_time: date("end_time").notNull(),
+  trainer_id: integer("trainer_id").notNull(),
+  start_time: timestamp("start_time", { mode: "string" }).notNull(),
+  end_time: timestamp("end_time", {mode: "string"}).notNull(),
   current_enrollment: integer("current_enrollment").notNull(),
   capacity: integer("capacity").notNull(),
   room: integer("room").references(() => rooms.room_id),
