@@ -1,5 +1,5 @@
 {
-  "id": "d14c16eb-d1ec-4021-a979-ed9b5e7ba546",
+  "id": "26494d92-4b1c-40dc-a309-e95998237c0b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -257,42 +257,6 @@
         "member_user_id_users_user_id_fk": {
           "name": "member_user_id_users_user_id_fk",
           "tableFrom": "member",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "membershipCard": {
-      "name": "membershipCard",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "nfc": {
-          "name": "nfc",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "membershipCard_user_id_users_user_id_fk": {
-          "name": "membershipCard_user_id_users_user_id_fk",
-          "tableFrom": "membershipCard",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
