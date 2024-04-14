@@ -12,7 +12,7 @@ import { equipmentRoutes } from "./routes/equipmentRoutes";
 import { billingRoute } from "./routes/billingRoute";
 import { roomsRoute } from "./routes/roomsRoute";
 import {
-  adminStaff,
+  adminStaff, billingInformation,
   equipments,
   exercises,
   members,
@@ -20,7 +20,8 @@ import {
   rooms, routine, routineExercise,
   timeSlots,
   trainer,
-  userRoles
+  userRoles,
+  userRoutine
 } from "./src/drizzle/schema";
 import { users } from "./src/drizzle/schema";
 import {and, eq} from "drizzle-orm";
@@ -121,6 +122,17 @@ async function insertInitialData(): Promise<void> {
     {first_name: 'maxime', last_name: 'gagne', email: 'max@gagne.com', password: hashedPassword, phone: '1234567890', address: 'doe street'},
     {first_name: 'vincent', last_name: 'gagnon', email: 'vincent@gagnon.com', password: hashedPassword, phone: '1234567890', address: '5 vince street'},
     {first_name: 'Joe', last_name: 'rich', email: 'joe@rich.com', password: hashedPassword, phone: '1234567890', address: '2 rich street'},
+    {first_name: 'Alice', last_name: 'Miller', email: 'alice@miller.com', password: hashedPassword, phone: '3612988024', address: 'Magnolia street'},
+    {first_name: 'Irene', last_name: 'Jones', email: 'irene@jones.com', password: hashedPassword, phone: '8775332651', address: 'Elm street'},
+    {first_name: 'Eve', last_name: 'Taylor', email: 'eve@taylor.com', password: hashedPassword, phone: '4284698279', address: 'Aspen street'},
+    {first_name: 'Carol', last_name: 'Anderson', email: 'carol@anderson.com', password: hashedPassword, phone: '1188393902', address: 'Cedar street'},
+    {first_name: 'Bob', last_name: 'Jones', email: 'bob@jones.com', password: hashedPassword, phone: '8353281714', address: 'Maple street'},
+    {first_name: 'Alice', last_name: 'Anderson', email: 'alice@anderson.com', password: hashedPassword, phone: '7875440352', address: 'Oak street'},
+    {first_name: 'Frank', last_name: 'Johnson', email: 'frank@johnson.com', password: hashedPassword, phone: '4439907352', address: 'Willow street'},
+    {first_name: 'Jack', last_name: 'Brown', email: 'jack@brown.com', password: hashedPassword, phone: '0135968549', address: 'Elm street'},
+    {first_name: 'Irene', last_name: 'Moore', email: 'irene@moore.com', password: hashedPassword, phone: '2794474148', address: 'Oak street'},
+    {first_name: 'Hank', last_name: 'Brown', email: 'hank@brown.com', password: hashedPassword, phone: '3409510607', address: 'Birch street'}
+
   ]
   console.log("checking if members already exist")
   for (const member of membersToAdd) {
@@ -401,7 +413,43 @@ async function insertInitialData(): Promise<void> {
       }).execute();
     }
   }
-  // TODO: add more base state as required
+  // adding routines to users
+  const userRoutinesToAdd = [
+    {"user_id": 1, routine_id: 1},
+    {"user_id": 2, routine_id: 2},
+  ]
+  for (const userRoutineItem of userRoutinesToAdd) {
+    const userRoutineExist = await db.select().from(userRoutine).where(eq(userRoutine.user_id, userRoutineItem.user_id)).execute();
+
+    //console.log(userRoutineExist);
+
+    if (!userRoutineExist.length) {
+      await db.insert(userRoutine).values({
+        user_id: userRoutineItem.user_id,
+        routine_id: userRoutineItem.routine_id,
+      }).execute();
+    }
+  }
+  // Add billing information
+  // const billingInfoToAdd = [
+  //  { "user_id": 1 , periodicity: "weekly", card_type: "visa", card_holder: "rick smith", card_number: "123456789", expiry: "2026-04-07"},
+  // ]
+  // for (const billingInfo of billingInfoToAdd) {
+  //   const billingInfoExist = await db.select().from(billingInformation).where(eq(billingInformation.user_id, billingInfo.user_id)).execute();
+  //
+  //   //console.log(userRoutineExist);
+  //
+  //   if (!billingInfoExist.length) {
+  //     await db.insert(userRoutine).values({
+  //       user_id: billingInfo.user_id,
+  //       periodicity: billingInfo.periodicity,
+  //       card_type: billingInfo.card_type,
+  //       card_holder: billingInfo.card_holder,
+  //       card_number: billingInfo.card_number,
+  //       expiry: billingInfo.expiry,
+  //     }).execute();
+  //   }
+  // }
 }
 
 main().catch((err) => console.error(err));

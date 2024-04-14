@@ -13,9 +13,9 @@ interface billingBody {
 }
 
 interface paymentBody {
-    userId: number,
+    user_id: number,
     amount: number,
-    slot_id: number,
+    slots_id: number,
 }
 
 export async function billingRoute(fastify: FastifyInstance, options?) {
@@ -72,14 +72,14 @@ export async function billingRoute(fastify: FastifyInstance, options?) {
         try {
             console.log("In payment add");
             // Extract payment info from body
-            const {userId,amount, slot_id} = request.body;
-            console.log("Parsed body");
+            const {user_id,amount, slots_id} = request.body;
+            console.log("Parsed body", user_id, amount, slots_id);
 
             await db.insert(paymentInfo).values({
-                user_id: userId,
+                user_id: user_id,
                 payment_date: new Date().toISOString().slice(0, 10),
                 amount: amount,
-                slot_id: slot_id,
+                slot_id: slots_id,
             }).execute();
 
             console.log("payment insert worked?");
