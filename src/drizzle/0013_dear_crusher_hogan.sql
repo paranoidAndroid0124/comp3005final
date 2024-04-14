@@ -24,11 +24,11 @@ CREATE TABLE IF NOT EXISTS "equipment" (
 	"next_maintained" date NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "exercise" (
+CREATE TABLE IF NOT EXISTS "exercises" (
 	"exercise_id" serial PRIMARY KEY NOT NULL,
-	"exercise" text,
+	"exercise_name" text,
 	"reps" integer,
-	"duration" integer
+	"duration" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "member" (
@@ -61,15 +61,20 @@ CREATE TABLE IF NOT EXISTS "rooms" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "routine" (
 	"routine_id" serial PRIMARY KEY NOT NULL,
+	"routine_name" text
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "routineExercise" (
+	"routine_id" integer,
 	"exercise_id" integer
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "timeSlots" (
 	"slot_id" serial PRIMARY KEY NOT NULL,
 	"title" text NOT NULL,
-	"trainer_Id" integer NOT NULL,
-	"start_time" date NOT NULL,
-	"end_time" date NOT NULL,
+	"trainer_id" integer NOT NULL,
+	"start_time" timestamp NOT NULL,
+	"end_time" timestamp NOT NULL,
 	"current_enrollment" integer NOT NULL,
 	"capacity" integer NOT NULL,
 	"room" integer,
@@ -144,7 +149,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "routine" ADD CONSTRAINT "routine_exercise_id_exercise_exercise_id_fk" FOREIGN KEY ("exercise_id") REFERENCES "exercise"("exercise_id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "routineExercise" ADD CONSTRAINT "routineExercise_routine_id_routine_routine_id_fk" FOREIGN KEY ("routine_id") REFERENCES "routine"("routine_id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "routineExercise" ADD CONSTRAINT "routineExercise_exercise_id_exercises_exercise_id_fk" FOREIGN KEY ("exercise_id") REFERENCES "exercises"("exercise_id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -1,5 +1,5 @@
 {
-  "id": "26494d92-4b1c-40dc-a309-e95998237c0b",
+  "id": "f0f07fac-91ce-42a1-a82b-56e3a4234340",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -183,8 +183,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "exercise": {
-      "name": "exercise",
+    "exercises": {
+      "name": "exercises",
       "schema": "",
       "columns": {
         "exercise_id": {
@@ -193,8 +193,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "exercise": {
-          "name": "exercise",
+        "exercise_name": {
+          "name": "exercise_name",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -207,7 +207,7 @@
         },
         "duration": {
           "name": "duration",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
@@ -406,6 +406,28 @@
           "primaryKey": true,
           "notNull": true
         },
+        "routine_name": {
+          "name": "routine_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "routineExercise": {
+      "name": "routineExercise",
+      "schema": "",
+      "columns": {
+        "routine_id": {
+          "name": "routine_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "exercise_id": {
           "name": "exercise_id",
           "type": "integer",
@@ -415,10 +437,23 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "routine_exercise_id_exercise_exercise_id_fk": {
-          "name": "routine_exercise_id_exercise_exercise_id_fk",
-          "tableFrom": "routine",
-          "tableTo": "exercise",
+        "routineExercise_routine_id_routine_routine_id_fk": {
+          "name": "routineExercise_routine_id_routine_routine_id_fk",
+          "tableFrom": "routineExercise",
+          "tableTo": "routine",
+          "columnsFrom": [
+            "routine_id"
+          ],
+          "columnsTo": [
+            "routine_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "routineExercise_exercise_id_exercises_exercise_id_fk": {
+          "name": "routineExercise_exercise_id_exercises_exercise_id_fk",
+          "tableFrom": "routineExercise",
+          "tableTo": "exercises",
           "columnsFrom": [
             "exercise_id"
           ],
@@ -448,21 +483,21 @@
           "primaryKey": false,
           "notNull": true
         },
-        "trainer_Id": {
-          "name": "trainer_Id",
+        "trainer_id": {
+          "name": "trainer_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "start_time": {
           "name": "start_time",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
         "end_time": {
           "name": "end_time",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },

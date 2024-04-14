@@ -4,7 +4,7 @@ import {
   pgTable,
   serial,
   text,
-  pgSchema,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -64,9 +64,9 @@ export const equipments = pgTable("equipment", {
 export const timeSlots = pgTable("timeSlots", {
   slot_id: serial("slot_id").primaryKey(),
   title: text("title").notNull(),
-  trainer_id: integer("trainer_Id").notNull(),
-  start_time: date("start_time").notNull(),
-  end_time: date("end_time").notNull(),
+  trainer_id: integer("trainer_id").notNull(),
+  start_time: timestamp("start_time", { mode: "string" }).notNull(),
+  end_time: timestamp("end_time", {mode: "string"}).notNull(),
   current_enrollment: integer("current_enrollment").notNull(),
   capacity: integer("capacity").notNull(),
   room: integer("room").references(() => rooms.room_id),
@@ -88,16 +88,22 @@ export const trainer = pgTable("trainer", {
   user_id: integer("user_id").references(() => users.user_id),
 });
 
-export const exercise = pgTable("exercise", {
+export const exercises = pgTable("exercises", {
   exercise_id: serial("exercise_id").primaryKey(),
-  exercise_type: text("exercise"),
+  exercise_name: text("exercise_name"),
   reps: integer("reps"),
-  duration: integer("duration"),
+  duration: text("duration"),
 });
 
 export const routine = pgTable("routine", {
   routine_id: serial("routine_id").primaryKey(),
-  exercise_id: integer("exercise_id").references(() => exercise.exercise_id),
+  routine_name: text("routine_name"),
+});
+
+// this table links routines to exercises, allowing a many-to-relationship
+export const routineExercise = pgTable("routineExercise", {
+  routine_id: integer("routine_id").references(() => routine.routine_id),
+  exercise_id: integer("exercise_id").references(()=> exercises.exercise_id),
 });
 
 export const userRoutine = pgTable("userRoutine", {

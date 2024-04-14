@@ -1,16 +1,17 @@
 import {FastifyInstance} from "fastify";
 import {bookings, timeSlots} from "../src/drizzle/schema";
 import {db} from "../db";
-import {eq} from "drizzle-orm";
+import {eq, sql} from "drizzle-orm";
+import {timestamp} from "drizzle-orm/pg-core";
 
 interface timeSlotRegisterBody {
-    userID: number,
-    timeSlotsID: number,
+    user_id: number,
+    slot_id: number,
 }
 
 interface timeSlotBody {
     title: string
-    trainer: number,
+    trainer_id: number,
     startTime: string,
     endTime: string,
     capacity: number,
@@ -51,17 +52,39 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
 
     fastify.post<{Body: timeSlotRegisterBody}>('/timeslot/register', async (request, reply) => {
         try {
+            console.log("In register timeslot");
             // would it better in body or as params ?
-            const { userID, timeSlotsID } = request.body;
+            const { user_id, slot_id } = request.body;
+
+            console.log("user and slot id", user_id, slot_id);
 
             //TODO: check if userID and timeSlotID is valid
             await db.insert(bookings).values({
-                user_id: userID,
-                slot_id: timeSlotsID
+                user_id: user_id,
+                slot_id: slot_id
             }).execute();
+
+            console.log("Added registration to bookings")
+
+            // Uptime current enrollment
+            // await db.update(timeSlots)
+            //     .set({
+            //         current_enrollment: sql`${timeSlots.current_enrollment} + 1`
+            //     })
+            //     .where(eq(timeSlots.slot_id, timeSlotsID ))
+            //     .execute();
+
+            // TODO: test to make sure this works
+            const slot = await db.select().from(timeSlots).where(eq(timeSlots.slot_id, slot_id)).execute();
+            const slotNum = slot[0].current_enrollment + 1;
+            // update enrollment
+            await db.update(timeSlots).set({ current_enrollment: slotNum}).where(eq(timeSlots.slot_id, slot_id)).execute();
+
+            console.log("Incremented current enrollment");
 
             return reply.status(201).send();
         } catch (error) {
+            console.log("error", error)
             return reply.status(500).send({error: 'Internal Server Error'});
         }
     });
@@ -69,15 +92,17 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
     // this would likely only be done by admin or trainer
     fastify.post<{Body: timeSlotBody}>('/timeslots/add', async (request, reply) => {
         try {
-            const { title, trainer, startTime, endTime, capacity, room, price} = request.body;
+            const { title, trainer_id, startTime, endTime, capacity, room, price} = request.body;
 
+            console.log("startTime, endTime: ", startTime, endTime);
+            console.log("Typeof", typeof(startTime), typeof(endTime));
             // TODO: verify that the trainer is available at this time
             // TODO: verify that the user is allowed to add a timeslot
             // TODO: block duplicates
             // Logic to add a timeslot
             const timeslot = await db.insert(timeSlots).values({
                 title: title,
-                trainer_id: trainer,
+                trainer_id: trainer_id,
                 start_time: startTime,
                 end_time: endTime,
                 current_enrollment: 0,
@@ -87,6 +112,7 @@ export async function timeSlotRoutes(fastify: FastifyInstance, options?) {
             }).returning( {slotID: timeSlots.slot_id}).execute();
             return reply.status(201).send(timeslot[0].slotID);
         } catch (error) {
+            console.log("Error", error);
             return reply.status(500).send({error: 'Internal Server Error'});
         }
     });

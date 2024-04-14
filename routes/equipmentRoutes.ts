@@ -57,5 +57,24 @@ export async function equipmentRoutes(fastify: FastifyInstance, options?) {
        }
     });
 
+    fastify.post<{Body: equipmentBody}>('/equipment/updateMaintenance', async (request, reply) => {
+        try {
+            const {equipmentID} = request.body;
+
+            // Logic to set lastMaintained to current day, and nextMaintained to next year from now
+            const updatedEquipment: {updatedId: number}[] = await db.update(equipments)
+                .set({last_maintained: new Date().toISOString(),
+                      next_maintained: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().slice(0, 10)
+                })
+                .where(eq(equipments.equipment_id, equipmentID))
+                .returning( {updatedId: equipments.equipment_id});
+
+            return reply.status(201).send(updatedEquipment);
+        } catch(err){
+            console.log("Error: ", err)
+            return reply.status(500).send( { error: 'Internal Server Error'})
+        }
+    })
+
     // More routes (if needed)
 }
