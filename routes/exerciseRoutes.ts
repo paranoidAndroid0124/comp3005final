@@ -12,7 +12,6 @@ export async function exerciseRoutes(fastify: FastifyInstance, options?) {
         try {
             const exercisesList = await db.select().from(exercises).execute();
 
-
             return reply.status(200).send(exercisesList);
         }catch (error) {
             // handle db error

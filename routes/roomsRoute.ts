@@ -6,7 +6,6 @@ export async function roomsRoute(fastify: FastifyInstance, options?) {
     fastify.get('/rooms', async (request, reply) => {
        console.log("Getting all locations");
        try {
-            console.log("test")
            const locationList = await db.select().from(rooms).execute();
 
            return reply.status(200).send(locationList);
